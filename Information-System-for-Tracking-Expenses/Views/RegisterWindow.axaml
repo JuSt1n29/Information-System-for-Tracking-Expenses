@@ -1,0 +1,20 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="InformationSystemForTrackingExpenses.Views.RegisterWindow"
+        Title="Реєстрація"
+        Width="350" Height="340"
+        WindowStartupLocation="CenterScreen">
+
+    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="260" Spacing="10">
+        <TextBlock Text="Реєстрація нового користувача" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,10"/>
+
+        <TextBox x:Name="NameInput" PlaceholderText="Ім'я"/>
+        <TextBox x:Name="EmailInput" PlaceholderText="Email"/>
+        <TextBox x:Name="PasswordInput" PlaceholderText="Пароль" PasswordChar="*"/>
+
+        <TextBlock x:Name="ErrorText" Foreground="Red" HorizontalAlignment="Center" IsVisible="False" TextWrapping="Wrap"/>
+
+        <Button Content="Зареєструватися" Click="OnRegisterClick" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+        <Button Content="Назад до входу" Click="OnBackClick" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="Transparent"/>
+    </StackPanel>
+</Window>

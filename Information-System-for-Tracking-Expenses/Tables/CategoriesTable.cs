@@ -1,4 +1,4 @@
-namespace FinancialApp.Tables
+namespace InformationSystemForTrackingExpenses.Tables
 {
     public class CategoriesTable
     {

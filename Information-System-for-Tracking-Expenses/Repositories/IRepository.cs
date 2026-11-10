@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace FinancialApp.Repositories
+namespace InformationSystemForTrackingExpenses.Repositories
 {
     public interface IRepository<T> where T : class
     {

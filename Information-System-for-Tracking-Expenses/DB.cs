@@ -2,7 +2,7 @@ using MySqlConnector;
 using System;
 using System.Data;
 
-namespace FinancialApp
+namespace InformationSystemForTrackingExpenses
 {
     public class DB
     {

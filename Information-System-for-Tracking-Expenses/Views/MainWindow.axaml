@@ -1,0 +1,63 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="InformationSystemForTrackingExpenses.Views.MainWindow"
+        Title="FinancialApp - Транзакції"
+        Width="1000" Height="600"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid RowDefinitions="*, Auto, Auto" Margin="15" RowSpacing="10">
+        <!-- Таблиця з автогенерацією колонок, без жодних біндінгів -->
+        <DataGrid Grid.Row="0" x:Name="TransactionsGrid"
+                  AutoGenerateColumns="True"
+                  SelectionMode="Single"
+                  SelectionChanged="OnSelectionChanged"
+                  GridLinesVisibility="All"
+                  BorderBrush="LightGray" BorderThickness="1"/>
+
+        <!-- Поля вводу -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10">
+            <StackPanel Spacing="2">
+                <TextBlock Text="Account ID" FontSize="10" Foreground="Gray"/>
+                <TextBox x:Name="AccountIdBox" Width="80" Height="28"/>
+            </StackPanel>
+
+            <StackPanel Spacing="2">
+                <TextBlock Text="Type" FontSize="10" Foreground="Gray"/>
+                <TextBox x:Name="TypeBox" Width="90" Height="28"/>
+            </StackPanel>
+
+            <StackPanel Spacing="2">
+                <TextBlock Text="Amount" FontSize="10" Foreground="Gray"/>
+                <TextBox x:Name="AmountBox" Width="90" Height="28"/>
+            </StackPanel>
+
+            <StackPanel Spacing="2">
+                <TextBlock Text="Currency" FontSize="10" Foreground="Gray"/>
+                <TextBox x:Name="CurrencyBox" Width="70" Height="28"/>
+            </StackPanel>
+
+            <StackPanel Spacing="2">
+                <TextBlock Text="Category ID" FontSize="10" Foreground="Gray"/>
+                <TextBox x:Name="CategoryIdBox" Width="80" Height="28"/>
+            </StackPanel>
+
+            <StackPanel Spacing="2">
+                <TextBlock Text="Description" FontSize="10" Foreground="Gray"/>
+                <TextBox x:Name="DescriptionBox" Width="140" Height="28"/>
+            </StackPanel>
+
+            <StackPanel Spacing="2">
+                <TextBlock Text="ID (Edit/Del)" FontSize="10" Foreground="Gray"/>
+                <TextBox x:Name="UpdateIdBox" Width="80" Height="28" IsReadOnly="True"/>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Кнопки управління -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="10">
+            <Button Content="Add" Click="OnAddClick" Background="#D4EDDA" Width="110"/>
+            <Button Content="Update" Click="OnUpdateClick" Background="#FFF3CD" Width="110"/>
+            <Button Content="Delete" Click="OnDeleteClick" Background="#F8D7DA" Foreground="Red" Width="110"/>
+            <Button Content="Refresh" Click="OnRefreshClick" Width="90"/>
+        </StackPanel>
+    </Grid>
+</Window>

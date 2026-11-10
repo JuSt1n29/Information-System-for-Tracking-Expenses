@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using FinancialApp.Tables;
+using InformationSystemForTrackingExpenses.Tables;
 
-namespace FinancialApp.Repositories
+namespace InformationSystemForTrackingExpenses.Repositories
 {
     internal class UsersRep
     {
@@ -12,6 +12,14 @@ namespace FinancialApp.Repositories
         {
             foreach (UsersTable k in GetAll())
                 if (k.id == id) return k;
+            return null;
+        }
+
+        public UsersTable GetByEmail(string email)
+        {
+            foreach (UsersTable k in GetAll())
+                if (string.Equals(k.email, email, StringComparison.OrdinalIgnoreCase)) 
+                    return k;
             return null;
         }
 
@@ -42,8 +50,17 @@ namespace FinancialApp.Repositories
         {
             try 
             { 
+                // Вычисляем следующий свободный id прямо в репозитории
+                int nextId = 1;
+                foreach (var user in GetAll())
+                {
+                    if (user.id >= nextId) 
+                        nextId = user.id + 1;
+                }
+
                 string dateStr = entity.created_at.ToString("yyyy-MM-dd HH:mm:ss");
-                return db.execSql($"INSERT INTO users (id, name, email, password_hash, role, created_at) VALUES ({entity.id}, '{entity.name}', '{entity.email}', '{entity.password_hash}', '{entity.role}', '{dateStr}')"); 
+                
+                return db.execSql($"INSERT INTO users (id, name, email, password_hash, role, created_at) VALUES ({nextId}, '{entity.name}', '{entity.email}', '{entity.password_hash}', '{entity.role}', '{dateStr}')"); 
             }
             catch (Exception e) { Console.WriteLine(e.Message); return false; }
         }

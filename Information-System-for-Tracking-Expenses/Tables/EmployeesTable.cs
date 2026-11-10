@@ -1,6 +1,6 @@
 using System;
 
-namespace FinancialApp.Tables
+namespace InformationSystemForTrackingExpenses.Tables
 {
     public class EmployeesTable
     {

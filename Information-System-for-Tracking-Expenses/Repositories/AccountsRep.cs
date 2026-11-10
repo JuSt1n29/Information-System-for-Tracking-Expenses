@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using FinancialApp.Tables;
+using InformationSystemForTrackingExpenses.Tables;
 
-namespace FinancialApp.Repositories
+namespace InformationSystemForTrackingExpenses.Repositories
 {
     internal class AccountsRep
     {

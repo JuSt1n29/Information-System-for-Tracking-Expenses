@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using FinancialApp.Tables;
+using InformationSystemForTrackingExpenses.Tables;
 
-namespace FinancialApp.Repositories
+namespace  InformationSystemForTrackingExpenses.Repositories
 {
     internal class CounterpartiesRep
     {
