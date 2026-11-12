@@ -117,6 +117,27 @@ namespace InformationSystemForTrackingExpenses.Views
             LoadData();
         }
 
+        // Методи відкриття інших вікон-довідників
+        private void OnOpenAccountsClick(object? sender, RoutedEventArgs e)
+        {
+            new AccountsWindow().ShowDialog(this);
+        }
+
+        private void OnOpenCounterpartiesClick(object? sender, RoutedEventArgs e)
+        {
+            new CounterpartiesWindow().ShowDialog(this);
+        }
+
+        private void OnOpenEmployeesClick(object? sender, RoutedEventArgs e)
+        {
+            new EmployeesWindow().ShowDialog(this);
+        }
+
+        private void OnOpenCategoriesClick(object? sender, RoutedEventArgs e)
+        {
+            new CategoriesWindow().ShowDialog(this);
+        }
+
         private void ClearInputs()
         {
             AccountIdBox.Text = "";

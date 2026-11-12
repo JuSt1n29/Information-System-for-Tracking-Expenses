@@ -1,21 +1,30 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="InformationSystemForTrackingExpenses.Views.MainWindow"
-        Title="FinancialApp - Транзакції"
-        Width="1000" Height="600"
+        Title="FinancialApp - Головне вікно (Транзакції)"
+        Width="1100" Height="650"
         WindowStartupLocation="CenterScreen">
 
-    <Grid RowDefinitions="*, Auto, Auto" Margin="15" RowSpacing="10">
-        <!-- Таблиця з автогенерацією колонок, без жодних біндінгів -->
-        <DataGrid Grid.Row="0" x:Name="TransactionsGrid"
+    <Grid RowDefinitions="Auto, *, Auto, Auto" Margin="15" RowSpacing="10">
+        
+        <!-- Меню / Кнопки навігації по довідниках -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Background="#F0F0F0" Margin="0,0,0,5">
+            <Button Content="📁 Рахунки" Click="OnOpenAccountsClick" Background="#E2E3E5"/>
+            <Button Content="🤝 Контрагенти" Click="OnOpenCounterpartiesClick" Background="#E2E3E5"/>
+            <Button Content="👨‍💼 Працівники" Click="OnOpenEmployeesClick" Background="#E2E3E5"/>
+            <Button Content="🏷️ Категорії" Click="OnOpenCategoriesClick" Background="#E2E3E5"/>
+        </StackPanel>
+
+        <!-- Таблиця транзакцій -->
+        <DataGrid Grid.Row="1" x:Name="TransactionsGrid"
                   AutoGenerateColumns="True"
                   SelectionMode="Single"
                   SelectionChanged="OnSelectionChanged"
                   GridLinesVisibility="All"
                   BorderBrush="LightGray" BorderThickness="1"/>
 
-        <!-- Поля вводу -->
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10">
+        <!-- Поля вводу для транзакцій -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="10">
             <StackPanel Spacing="2">
                 <TextBlock Text="Account ID" FontSize="10" Foreground="Gray"/>
                 <TextBox x:Name="AccountIdBox" Width="80" Height="28"/>
@@ -43,7 +52,7 @@
 
             <StackPanel Spacing="2">
                 <TextBlock Text="Description" FontSize="10" Foreground="Gray"/>
-                <TextBox x:Name="DescriptionBox" Width="140" Height="28"/>
+                <TextBox x:Name="DescriptionBox" Width="160" Height="28"/>
             </StackPanel>
 
             <StackPanel Spacing="2">
@@ -52,12 +61,12 @@
             </StackPanel>
         </StackPanel>
 
-        <!-- Кнопки управління -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="10">
-            <Button Content="Add" Click="OnAddClick" Background="#D4EDDA" Width="110"/>
-            <Button Content="Update" Click="OnUpdateClick" Background="#FFF3CD" Width="110"/>
-            <Button Content="Delete" Click="OnDeleteClick" Background="#F8D7DA" Foreground="Red" Width="110"/>
-            <Button Content="Refresh" Click="OnRefreshClick" Width="90"/>
+        <!-- Кнопки управління транзакціями -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="10">
+            <Button Content="Add Transaction" Click="OnAddClick" Background="#D4EDDA" Width="130"/>
+            <Button Content="Update Transaction" Click="OnUpdateClick" Background="#FFF3CD" Width="140"/>
+            <Button Content="Delete Transaction" Click="OnDeleteClick" Background="#F8D7DA" Foreground="Red" Width="130"/>
+            <Button Content="Refresh List" Click="OnRefreshClick" Width="100"/>
         </StackPanel>
     </Grid>
 </Window>

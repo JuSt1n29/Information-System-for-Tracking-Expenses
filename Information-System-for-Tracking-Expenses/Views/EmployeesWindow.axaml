@@ -1,0 +1,32 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="InformationSystemForTrackingExpenses.Views.EmployeesWindow"
+        Title="Керування працівниками" Width="950" Height="500"
+        WindowStartupLocation="CenterOwner">
+
+    <Grid RowDefinitions="*, Auto, Auto" Margin="15" RowSpacing="10">
+        <DataGrid Grid.Row="0" x:Name="EmployeesGrid"
+                  AutoGenerateColumns="True"
+                  SelectionMode="Single"
+                  SelectionChanged="OnSelectionChanged"
+                  GridLinesVisibility="All"
+                  BorderBrush="LightGray" BorderThickness="1"/>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10">
+            <StackPanel Spacing="2"><TextBlock Text="Full Name" FontSize="10" Foreground="Gray"/><TextBox x:Name="NameBox" Width="140" Height="28"/></StackPanel>
+            <StackPanel Spacing="2"><TextBlock Text="Position" FontSize="10" Foreground="Gray"/><TextBox x:Name="PositionBox" Width="100" Height="28"/></StackPanel>
+            <StackPanel Spacing="2"><TextBlock Text="Phone" FontSize="10" Foreground="Gray"/><TextBox x:Name="PhoneBox" Width="110" Height="28"/></StackPanel>
+            <StackPanel Spacing="2"><TextBlock Text="Email" FontSize="10" Foreground="Gray"/><TextBox x:Name="EmailBox" Width="130" Height="28"/></StackPanel>
+            <StackPanel Spacing="2"><TextBlock Text="Salary" FontSize="10" Foreground="Gray"/><TextBox x:Name="SalaryBox" Width="80" Height="28"/></StackPanel>
+            <StackPanel Spacing="2"><TextBlock Text="Status" FontSize="10" Foreground="Gray"/><TextBox x:Name="StatusBox" Width="80" Height="28"/></StackPanel>
+            <StackPanel Spacing="2"><TextBlock Text="ID (Edit/Del)" FontSize="10" Foreground="Gray"/><TextBox x:Name="UpdateIdBox" Width="80" Height="28" IsReadOnly="True"/></StackPanel>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="10">
+            <Button Content="Add" Click="OnAddClick" Background="#D4EDDA" Width="100"/>
+            <Button Content="Update" Click="OnUpdateClick" Background="#FFF3CD" Width="100"/>
+            <Button Content="Delete" Click="OnDeleteClick" Background="#F8D7DA" Foreground="Red" Width="100"/>
+            <Button Content="Close" Click="OnCloseClick" Width="90"/>
+        </StackPanel>
+    </Grid>
+</Window>
