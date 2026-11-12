@@ -3,51 +3,60 @@
         x:Class="InformationSystemForTrackingExpenses.Views.MainWindow"
         Title="FinancialApp - Transactions"
         Width="950" Height="600"
+        Background="#121614"
+        Foreground="#E0E0E0"
         WindowStartupLocation="CenterScreen">
 
     <Grid RowDefinitions="Auto, *, Auto, Auto" Margin="15" RowSpacing="10">
         
-        <!-- Меню / Навигация по справочникам -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Background="#F8F9FA" Margin="0,0,0,5">
-            <Button Content="Accounts" Click="OnOpenAccountsClick" Width="100"/>
-            <Button Content="Counterparties" Click="OnOpenCounterpartiesClick" Width="120"/>
-            <Button Content="Employees" Click="OnOpenEmployeesClick" Width="110"/>
-            <Button Content="Categories" Click="OnOpenCategoriesClick" Width="100"/>
-        </StackPanel>
+        <!-- Меню / Навигация по справочникам (Темно-зеленый стиль) -->
+        <Border Grid.Row="0" Background="#1B2E23" Margin="0,0,0,5" Padding="8" CornerRadius="6">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <Button Content="Accounts" Click="OnOpenAccountsClick" Width="100" Background="#2D4F3C" Foreground="White"/>
+                <Button Content="Counterparties" Click="OnOpenCounterpartiesClick" Width="120" Background="#2D4F3C" Foreground="White"/>
+                <Button Content="Employees" Click="OnOpenEmployeesClick" Width="110" Background="#2D4F3C" Foreground="White"/>
+                <Button Content="Categories" Click="OnOpenCategoriesClick" Width="100" Background="#2D4F3C" Foreground="White"/>
+            </StackPanel>
+        </Border>
 
-        <!-- Таблица транзакций -->
+        <!-- Таблица транзакций (Темная тема) -->
         <DataGrid Grid.Row="1" x:Name="TransactionsGrid"
                   AutoGenerateColumns="True"
                   SelectionMode="Single"
                   SelectionChanged="OnSelectionChanged"
                   GridLinesVisibility="All"
-                  BorderBrush="LightGray" BorderThickness="1"/>
+                  Background="#1A1F1C"
+                  RowBackground="#1A1F1C"
+                  Foreground="#E0E0E0"
+                  BorderBrush="#3A4D40" BorderThickness="1"/>
 
-        <!-- Панель действий с выбранной строкой (скрыта, пока строка не выбрана) -->
-        <StackPanel Grid.Row="2" x:Name="ActionPanel" IsVisible="False" Spacing="8" Background="#FFF8E1" Margin="0,5">
-            <TextBlock Text="Selected Transaction Management:" FontWeight="Bold" FontSize="12" Margin="5,5,0,0"/>
-            <StackPanel Orientation="Horizontal" Spacing="10" Margin="5,0,5,5">
-                <StackPanel Spacing="2">
-                    <TextBlock Text="Amount" FontSize="10" Foreground="Gray"/>
-                    <TextBox x:Name="EditAmountBox" Width="90" Height="26"/>
+        <!-- Панель действий с выбранной строкой (Коричнево-черный стиль) -->
+        <Border Grid.Row="2" x:Name="ActionPanel" IsVisible="False" Background="#221C18" Margin="0,5" Padding="10" CornerRadius="6">
+            <StackPanel Spacing="8">
+                <TextBlock Text="Selected Transaction Management:" FontWeight="Bold" FontSize="12" Foreground="#D4A373" Margin="2,0,0,0"/>
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Amount" FontSize="10" Foreground="#A39382"/>
+                        <TextBox x:Name="EditAmountBox" Width="90" Height="28" Background="#161210" Foreground="White" BorderBrush="#5C4033"/>
+                    </StackPanel>
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Description" FontSize="10" Foreground="#A39382"/>
+                        <TextBox x:Name="EditDescriptionBox" Width="220" Height="28" Background="#161210" Foreground="White" BorderBrush="#5C4033"/>
+                    </StackPanel>
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="ID" FontSize="10" Foreground="#A39382"/>
+                        <TextBox x:Name="UpdateIdBox" Width="60" Height="28" Background="#161210" Foreground="#888" BorderBrush="#5C4033" IsReadOnly="True"/>
+                    </StackPanel>
+                    <Button Content="Update" Click="OnUpdateClick" Background="#8B5A2B" Foreground="White" Width="100" VerticalAlignment="Bottom" Height="28"/>
+                    <Button Content="Delete" Click="OnDeleteClick" Background="#4E2A1D" Foreground="#FFA0A0" Width="100" VerticalAlignment="Bottom" Height="28"/>
                 </StackPanel>
-                <StackPanel Spacing="2">
-                    <TextBlock Text="Description" FontSize="10" Foreground="Gray"/>
-                    <TextBox x:Name="EditDescriptionBox" Width="200" Height="26"/>
-                </StackPanel>
-                <StackPanel Spacing="2">
-                    <TextBlock Text="ID" FontSize="10" Foreground="Gray"/>
-                    <TextBox x:Name="UpdateIdBox" Width="60" Height="26" IsReadOnly="True"/>
-                </StackPanel>
-                <Button Content="Update" Click="OnUpdateClick" Background="#FFF3CD" Width="100" VerticalAlignment="Bottom"/>
-                <Button Content="Delete" Click="OnDeleteClick" Background="#F8D7DA" Foreground="Red" Width="100" VerticalAlignment="Bottom"/>
             </StackPanel>
-        </StackPanel>
+        </Border>
 
         <!-- Основные кнопки управления -->
         <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="10">
-            <Button Content="Add Transaction" Click="OnAddClick" Background="#D4EDDA" Width="140"/>
-            <Button Content="Refresh List" Click="OnRefreshClick" Width="110"/>
+            <Button Content="Add Transaction" Click="OnAddClick" Background="#2D5A27" Foreground="White" Width="140" Height="32"/>
+            <Button Content="Refresh List" Click="OnRefreshClick" Background="#2B3630" Foreground="#CCC" Width="110" Height="32"/>
         </StackPanel>
     </Grid>
 </Window>

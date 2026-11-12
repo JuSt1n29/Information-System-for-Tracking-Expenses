@@ -1,31 +1,56 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="InformationSystemForTrackingExpenses.Views.CounterpartiesWindow"
-        Title="Керування контрагентами" Width="900" Height="500"
+        Title="Counterparties Management" Width="900" Height="500"
+        Background="#121614" Foreground="#E0E0E0"
         WindowStartupLocation="CenterOwner">
 
     <Grid RowDefinitions="*, Auto, Auto" Margin="15" RowSpacing="10">
+        
         <DataGrid Grid.Row="0" x:Name="CounterpartiesGrid"
                   AutoGenerateColumns="True"
                   SelectionMode="Single"
                   SelectionChanged="OnSelectionChanged"
                   GridLinesVisibility="All"
-                  BorderBrush="LightGray" BorderThickness="1"/>
+                  Background="#1A1F1C" RowBackground="#1A1F1C" Foreground="#E0E0E0"
+                  BorderBrush="#3A4D40" BorderThickness="1"/>
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10">
-            <StackPanel Spacing="2"><TextBlock Text="Name" FontSize="10" Foreground="Gray"/><TextBox x:Name="NameBox" Width="140" Height="28"/></StackPanel>
-            <StackPanel Spacing="2"><TextBlock Text="Type" FontSize="10" Foreground="Gray"/><TextBox x:Name="TypeBox" Width="90" Height="28"/></StackPanel>
-            <StackPanel Spacing="2"><TextBlock Text="Tax Number" FontSize="10" Foreground="Gray"/><TextBox x:Name="TaxBox" Width="100" Height="28"/></StackPanel>
-            <StackPanel Spacing="2"><TextBlock Text="Phone" FontSize="10" Foreground="Gray"/><TextBox x:Name="PhoneBox" Width="120" Height="28"/></StackPanel>
-            <StackPanel Spacing="2"><TextBlock Text="Email" FontSize="10" Foreground="Gray"/><TextBox x:Name="EmailBox" Width="140" Height="28"/></StackPanel>
-            <StackPanel Spacing="2"><TextBlock Text="ID (Edit/Del)" FontSize="10" Foreground="Gray"/><TextBox x:Name="UpdateIdBox" Width="80" Height="28" IsReadOnly="True"/></StackPanel>
-        </StackPanel>
+        <Border Grid.Row="1" x:Name="ActionPanel" IsVisible="False" Background="#221C18" Margin="0,5" Padding="10" CornerRadius="6">
+            <StackPanel Spacing="8">
+                <TextBlock Text="Selected Counterparty Management:" FontWeight="Bold" FontSize="12" Foreground="#D4A373" Margin="2,0,0,0"/>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Name" FontSize="10" Foreground="#A39382"/>
+                        <TextBox x:Name="EditNameBox" Width="130" Height="28" Background="#161210" Foreground="White" BorderBrush="#5C4033"/>
+                    </StackPanel>
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Type" FontSize="10" Foreground="#A39382"/>
+                        <TextBox x:Name="EditTypeBox" Width="90" Height="28" Background="#161210" Foreground="White" BorderBrush="#5C4033"/>
+                    </StackPanel>
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Tax Number" FontSize="10" Foreground="#A39382"/>
+                        <TextBox x:Name="EditTaxBox" Width="100" Height="28" Background="#161210" Foreground="White" BorderBrush="#5C4033"/>
+                    </StackPanel>
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Phone" FontSize="10" Foreground="#A39382"/>
+                        <TextBox x:Name="EditPhoneBox" Width="100" Height="28" Background="#161210" Foreground="White" BorderBrush="#5C4033"/>
+                    </StackPanel>
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Email" FontSize="10" Foreground="#A39382"/>
+                        <TextBox x:Name="EditEmailBox" Width="120" Height="28" Background="#161210" Foreground="White" BorderBrush="#5C4033"/>
+                    </StackPanel>
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="ID" FontSize="10" Foreground="#A39382"/>
+                        <TextBox x:Name="UpdateIdBox" Width="40" Height="28" Background="#161210" Foreground="#888" BorderBrush="#5C4033" IsReadOnly="True"/>
+                    </StackPanel>
+                    <Button Content="Update" Click="OnUpdateClick" Background="#8B5A2B" Foreground="White" Width="80" VerticalAlignment="Bottom" Height="28"/>
+                    <Button Content="Delete" Click="OnDeleteClick" Background="#4E2A1D" Foreground="#FFA0A0" Width="80" VerticalAlignment="Bottom" Height="28"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="10">
-            <Button Content="Add" Click="OnAddClick" Background="#D4EDDA" Width="100"/>
-            <Button Content="Update" Click="OnUpdateClick" Background="#FFF3CD" Width="100"/>
-            <Button Content="Delete" Click="OnDeleteClick" Background="#F8D7DA" Foreground="Red" Width="100"/>
-            <Button Content="Close" Click="OnCloseClick" Width="90"/>
+            <Button Content="Refresh List" Click="OnRefreshClick" Background="#2B3630" Foreground="#CCC" Width="110" Height="32"/>
         </StackPanel>
     </Grid>
 </Window>

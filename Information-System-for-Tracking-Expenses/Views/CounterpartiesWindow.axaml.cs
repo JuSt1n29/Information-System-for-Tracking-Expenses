@@ -1,4 +1,3 @@
-using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using InformationSystemForTrackingExpenses.Repositories;
@@ -8,7 +7,8 @@ namespace InformationSystemForTrackingExpenses.Views
 {
     public partial class CounterpartiesWindow : Window
     {
-        private CounterpartiesRep repo = new CounterpartiesRep();
+        private CounterpartiesRep _repo = new CounterpartiesRep();
+        private int _selectedId = -1;
 
         public CounterpartiesWindow()
         {
@@ -19,61 +19,61 @@ namespace InformationSystemForTrackingExpenses.Views
         private void LoadData()
         {
             CounterpartiesGrid.ItemsSource = null;
-            CounterpartiesGrid.ItemsSource = repo.GetAll();
+            CounterpartiesGrid.ItemsSource = _repo.GetAll();
+            ActionPanel.IsVisible = false;
+            CounterpartiesGrid.SelectedItem = null;
         }
 
         private void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (CounterpartiesGrid.SelectedItem is CounterpartiesTable item)
             {
-                NameBox.Text = item.name;
-                TypeBox.Text = item.type;
-                TaxBox.Text = item.tax_number;
-                PhoneBox.Text = item.phone;
-                EmailBox.Text = item.email;
+                _selectedId = item.id;
+                EditNameBox.Text = item.name;
+                EditTypeBox.Text = item.type;
+                EditTaxBox.Text = item.tax_number;
+                EditPhoneBox.Text = item.phone;
+                EditEmailBox.Text = item.email;
                 UpdateIdBox.Text = item.id.ToString();
+
+                ActionPanel.IsVisible = true;
             }
-        }
-
-        private int GetNextId()
-        {
-            int maxId = 0;
-            foreach (var item in repo.GetAll()) if (item.id > maxId) maxId = item.id;
-            return maxId + 1;
-        }
-
-        private void OnAddClick(object? sender, RoutedEventArgs e)
-        {
-            string name = NameBox.Text?.Trim() ?? "";
-            if (string.IsNullOrEmpty(name)) return;
-
-            int nextId = GetNextId();
-            var newItem = new CounterpartiesTable(nextId, name, TypeBox.Text?.Trim() ?? "", TaxBox.Text?.Trim() ?? "", PhoneBox.Text?.Trim() ?? "", EmailBox.Text?.Trim() ?? "");
-            if (repo.Add(newItem)) { LoadData(); ClearInputs(); }
+            else
+            {
+                ActionPanel.IsVisible = false;
+            }
         }
 
         private void OnUpdateClick(object? sender, RoutedEventArgs e)
         {
-            if (!int.TryParse(UpdateIdBox.Text, out int id) || id <= 0) return;
-            string name = NameBox.Text?.Trim() ?? "";
-            if (string.IsNullOrEmpty(name)) return;
+            if (_selectedId <= 0) return;
 
-            var updatedItem = new CounterpartiesTable(id, name, TypeBox.Text?.Trim() ?? "", TaxBox.Text?.Trim() ?? "", PhoneBox.Text?.Trim() ?? "", EmailBox.Text?.Trim() ?? "");
-            if (repo.Update(updatedItem)) LoadData();
+            var updated = new CounterpartiesTable(
+                _selectedId,
+                EditNameBox.Text?.Trim() ?? "",
+                EditTypeBox.Text?.Trim() ?? "",
+                string.IsNullOrWhiteSpace(EditTaxBox.Text) ? null : EditTaxBox.Text.Trim(),
+                string.IsNullOrWhiteSpace(EditPhoneBox.Text) ? null : EditPhoneBox.Text.Trim(),
+                string.IsNullOrWhiteSpace(EditEmailBox.Text) ? null : EditEmailBox.Text.Trim()
+            );
+
+            if (_repo.Update(updated))
+            {
+                LoadData();
+            }
         }
 
         private void OnDeleteClick(object? sender, RoutedEventArgs e)
         {
-            if (!int.TryParse(UpdateIdBox.Text, out int id) || id <= 0) return;
-            var emptyItem = new CounterpartiesTable(id, "", "", "", "", "");
-            if (repo.Delete(emptyItem)) { LoadData(); ClearInputs(); }
+            if (_selectedId <= 0) return;
+
+            var empty = new CounterpartiesTable(_selectedId, "", "", null, null, null);
+            if (_repo.Delete(empty))
+            {
+                LoadData();
+            }
         }
 
-        private void OnCloseClick(object? sender, RoutedEventArgs e) => Close();
-
-        private void ClearInputs()
-        {
-            NameBox.Text = ""; TypeBox.Text = ""; TaxBox.Text = ""; PhoneBox.Text = ""; EmailBox.Text = ""; UpdateIdBox.Text = "";
-        }
+        private void OnRefreshClick(object? sender, RoutedEventArgs e) => LoadData();
     }
 }

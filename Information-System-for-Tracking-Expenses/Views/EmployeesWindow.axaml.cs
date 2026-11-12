@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using InformationSystemForTrackingExpenses.Repositories;
@@ -8,7 +9,8 @@ namespace InformationSystemForTrackingExpenses.Views
 {
     public partial class EmployeesWindow : Window
     {
-        private EmployeesRep repo = new EmployeesRep();
+        private EmployeesRep _repo = new EmployeesRep();
+        private int _selectedId = -1;
 
         public EmployeesWindow()
         {
@@ -19,62 +21,71 @@ namespace InformationSystemForTrackingExpenses.Views
         private void LoadData()
         {
             EmployeesGrid.ItemsSource = null;
-            EmployeesGrid.ItemsSource = repo.GetAll();
+            EmployeesGrid.ItemsSource = _repo.GetAll();
+            ActionPanel.IsVisible = false;
+            EmployeesGrid.SelectedItem = null;
         }
 
         private void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (EmployeesGrid.SelectedItem is EmployeesTable item)
             {
-                NameBox.Text = item.full_name;
-                PositionBox.Text = item.position;
-                PhoneBox.Text = item.phone;
-                EmailBox.Text = item.email;
-                SalaryBox.Text = item.salary.ToString();
-                StatusBox.Text = item.status;
+                _selectedId = item.id;
+                EditNameBox.Text = item.full_name;
+                EditPositionBox.Text = item.position;
+                EditPhoneBox.Text = item.phone;
+                EditEmailBox.Text = item.email;
+                EditSalaryBox.Text = item.salary.ToString();
+                EditStatusBox.Text = item.status;
                 UpdateIdBox.Text = item.id.ToString();
+
+                ActionPanel.IsVisible = true;
             }
-        }
-
-        private int GetNextId()
-        {
-            int maxId = 0;
-            foreach (var item in repo.GetAll()) if (item.id > maxId) maxId = item.id;
-            return maxId + 1;
-        }
-
-        private void OnAddClick(object? sender, RoutedEventArgs e)
-        {
-            string name = NameBox.Text?.Trim() ?? "";
-            if (string.IsNullOrEmpty(name) || !decimal.TryParse(SalaryBox.Text, out decimal salary)) return;
-
-            int nextId = GetNextId();
-            var newItem = new EmployeesTable(nextId, name, PositionBox.Text?.Trim() ?? "", PhoneBox.Text?.Trim() ?? "", EmailBox.Text?.Trim() ?? "", salary, DateTime.Now, StatusBox.Text?.Trim() ?? "active");
-            if (repo.Add(newItem)) { LoadData(); ClearInputs(); }
+            else
+            {
+                ActionPanel.IsVisible = false;
+            }
         }
 
         private void OnUpdateClick(object? sender, RoutedEventArgs e)
         {
-            if (!int.TryParse(UpdateIdBox.Text, out int id) || id <= 0) return;
-            string name = NameBox.Text?.Trim() ?? "";
-            if (string.IsNullOrEmpty(name) || !decimal.TryParse(SalaryBox.Text, out decimal salary)) return;
+            if (_selectedId <= 0) return;
+            if (!decimal.TryParse(EditSalaryBox.Text, out decimal salary)) return;
 
-            var updatedItem = new EmployeesTable(id, name, PositionBox.Text?.Trim() ?? "", PhoneBox.Text?.Trim() ?? "", EmailBox.Text?.Trim() ?? "", salary, DateTime.Now, StatusBox.Text?.Trim() ?? "active");
-            if (repo.Update(updatedItem)) LoadData();
+            var existing = _repo.GetAll();
+            var current = existing.FirstOrDefault(x => x.id == _selectedId);
+
+            if (current != null)
+            {
+                var updated = new EmployeesTable(
+                    current.id,
+                    EditNameBox.Text?.Trim() ?? "",
+                    string.IsNullOrWhiteSpace(EditPositionBox.Text) ? null : EditPositionBox.Text.Trim(),
+                    string.IsNullOrWhiteSpace(EditPhoneBox.Text) ? null : EditPhoneBox.Text.Trim(),
+                    string.IsNullOrWhiteSpace(EditEmailBox.Text) ? null : EditEmailBox.Text.Trim(),
+                    salary,
+                    current.hire_date,
+                    EditStatusBox.Text?.Trim() ?? "active"
+                );
+
+                if (_repo.Update(updated))
+                {
+                    LoadData();
+                }
+            }
         }
 
         private void OnDeleteClick(object? sender, RoutedEventArgs e)
         {
-            if (!int.TryParse(UpdateIdBox.Text, out int id) || id <= 0) return;
-            var emptyItem = new EmployeesTable(id, "", "", "", "", 0, DateTime.Now, "");
-            if (repo.Delete(emptyItem)) { LoadData(); ClearInputs(); }
+            if (_selectedId <= 0) return;
+
+            var empty = new EmployeesTable(_selectedId, "", null, null, null, 0, DateTime.Now, "");
+            if (_repo.Delete(empty))
+            {
+                LoadData();
+            }
         }
 
-        private void OnCloseClick(object? sender, RoutedEventArgs e) => Close();
-
-        private void ClearInputs()
-        {
-            NameBox.Text = ""; PositionBox.Text = ""; PhoneBox.Text = ""; EmailBox.Text = ""; SalaryBox.Text = ""; StatusBox.Text = ""; UpdateIdBox.Text = "";
-        }
+        private void OnRefreshClick(object? sender, RoutedEventArgs e) => LoadData();
     }
 }
