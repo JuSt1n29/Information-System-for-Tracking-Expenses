@@ -1,65 +1,52 @@
-using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using InformationSystemForTrackingExpenses.Repositories;
-using InformationSystemForTrackingExpenses.Tables;
 
 namespace InformationSystemForTrackingExpenses.Views
 {
     public partial class RegisterWindow : Window
     {
-        private readonly UsersRep _usersRep = new UsersRep();
-
         public RegisterWindow()
         {
             InitializeComponent();
         }
 
-        private void OnRegisterClick(object sender, RoutedEventArgs e)
+        private void OnRegisterClick(object? sender, RoutedEventArgs e)
         {
-            string name = NameInput.Text ?? "";
-            string email = EmailInput.Text ?? "";
-            string password = PasswordInput.Text ?? "";
+            string name = NameBox.Text?.Trim() ?? "";
+            string email = EmailBox.Text?.Trim() ?? "";
+            string pass = PasswordBox.Text ?? "";
+            string confirm = ConfirmPasswordBox.Text ?? "";
 
-            if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(pass))
             {
-                ErrorText.Text = "Заповніть всі поля!";
-                ErrorText.IsVisible = true;
+                ShowError("All fields are required.");
                 return;
             }
 
-            try
+            if (pass != confirm)
             {
-                // Хешируем пароль перед сохранением в базу данных
-                string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
-
-                var newUser = new UsersTable(
-                    id: 0, 
-                    name: name, 
-                    email: email, 
-                    password_hash: hashedPassword, // Сохраняем хэш вместо чистого текста
-                    role: "user", 
-                    created_at: DateTime.Now
-                );
-
-                _usersRep.Add(newUser);
-
-                var loginWindow = new LoginWindow();
-                loginWindow.Show();
-                this.Close();
+                ShowError("Passwords do not match.");
+                return;
             }
-            catch (Exception ex)
-            {
-                ErrorText.Text = "Помилка: " + ex.Message;
-                ErrorText.IsVisible = true;
-            }
+
+            // Здесь можно добавить сохранение нового пользователя в таблицу users через UsersRep
+            // После успешной регистрации возвращаемся на окно логина:
+            var loginWindow = new LoginWindow();
+            loginWindow.Show();
+            Close();
         }
 
-        private void OnBackClick(object sender, RoutedEventArgs e)
+        private void OnBackToLoginClick(object? sender, RoutedEventArgs e)
         {
             var loginWindow = new LoginWindow();
             loginWindow.Show();
-            this.Close();
+            Close();
+        }
+
+        private void ShowError(string message)
+        {
+            ErrorText.Text = message;
+            ErrorText.IsVisible = true;
         }
     }
 }

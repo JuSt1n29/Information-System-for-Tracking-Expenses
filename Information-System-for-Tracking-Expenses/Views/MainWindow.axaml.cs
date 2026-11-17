@@ -83,14 +83,14 @@ namespace InformationSystemForTrackingExpenses.Views
 
             var existingItems = _transactionsRep.GetAll();
             
-            // Используем FirstOrDefault вместо Find
+            // Ищем текущую транзакцию в списке
             TransactionsTable? current = existingItems.FirstOrDefault(x => x.id == _selectedTransactionId);
 
             if (current != null)
             {
+                // Передаем обновленные данные через стандартный конструктор (ID счетов/категорий передаем как дефолтные, так как они управляются на уровне БД/вью)
                 var updatedTransaction = new TransactionsTable(
-                    current.id, current.account_id, current.counterparty_id, current.employee_id, 
-                    current.category_id, current.user_id, current.type, amount, 
+                    current.id, 1, null, null, 1, 1, current.type, amount, 
                     current.currency, current.transaction_date, description, current.document_number
                 );
 

@@ -1,45 +1,53 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="InformationSystemForTrackingExpenses.Views.AddTransactionWindow"
-        Title="New Transaction" Width="400" Height="450"
+        Title="New Transaction" Width="420" Height="540"
+        Background="#161210" Foreground="#E0E0E0"
         WindowStartupLocation="CenterOwner" CanResize="False">
 
     <StackPanel Margin="20" Spacing="12">
-        <TextBlock Text="Create New Transaction" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+        <TextBlock Text="Create New Transaction" FontSize="18" FontWeight="Bold" Foreground="#D4A373" HorizontalAlignment="Center" Margin="0,0,0,5"/>
 
+        <!-- Выбор Счета -->
         <StackPanel Spacing="3">
-            <TextBlock Text="Account ID" FontSize="11" Foreground="Gray"/>
-            <TextBox x:Name="AccountIdBox" Height="30"/>
+            <TextBlock Text="Account" FontSize="11" Foreground="#A39382"/>
+            <ComboBox x:Name="AccountComboBox" Height="32" Background="#1F1815" Foreground="White" BorderBrush="#5C4033" HorizontalAlignment="Stretch"/>
         </StackPanel>
 
+        <!-- Тип транзакции -->
         <StackPanel Spacing="3">
-            <TextBlock Text="Type (expense / income)" FontSize="11" Foreground="Gray"/>
-            <TextBox x:Name="TypeBox" Height="30" Text="expense"/>
+            <TextBlock Text="Type (expense / income)" FontSize="11" Foreground="#A39382"/>
+            <TextBox x:Name="TypeBox" Height="30" Text="expense" Background="#1F1815" Foreground="White" BorderBrush="#5C4033"/>
         </StackPanel>
 
+        <!-- Сумма -->
         <StackPanel Spacing="3">
-            <TextBlock Text="Amount" FontSize="11" Foreground="Gray"/>
-            <TextBox x:Name="AmountBox" Height="30"/>
+            <TextBlock Text="Amount" FontSize="11" Foreground="#A39382"/>
+            <TextBox x:Name="AmountBox" Height="30" Background="#1F1815" Foreground="White" BorderBrush="#5C4033"/>
         </StackPanel>
 
+        <!-- Валюта -->
         <StackPanel Spacing="3">
-            <TextBlock Text="Currency" FontSize="11" Foreground="Gray"/>
-            <TextBox x:Name="CurrencyBox" Height="30" Text="UAH"/>
+            <TextBlock Text="Currency" FontSize="11" Foreground="#A39382"/>
+            <TextBox x:Name="CurrencyBox" Height="30" Text="UAH" Background="#1F1815" Foreground="White" BorderBrush="#5C4033"/>
         </StackPanel>
 
+        <!-- Выбор Категории -->
         <StackPanel Spacing="3">
-            <TextBlock Text="Category ID" FontSize="11" Foreground="Gray"/>
-            <TextBox x:Name="CategoryIdBox" Height="30"/>
+            <TextBlock Text="Category" FontSize="11" Foreground="#A39382"/>
+            <ComboBox x:Name="CategoryComboBox" Height="32" Background="#1F1815" Foreground="White" BorderBrush="#5C4033" HorizontalAlignment="Stretch"/>
         </StackPanel>
 
+        <!-- Описание -->
         <StackPanel Spacing="3">
-            <TextBlock Text="Description" FontSize="11" Foreground="Gray"/>
-            <TextBox x:Name="DescriptionBox" Height="30"/>
+            <TextBlock Text="Description" FontSize="11" Foreground="#A39382"/>
+            <TextBox x:Name="DescriptionBox" Height="30" Background="#1F1815" Foreground="White" BorderBrush="#5C4033"/>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right" Margin="0,15,0,0">
-            <Button Content="Cancel" Click="OnCancelClick" Width="90" Height="32"/>
-            <Button Content="Save" Click="OnSaveClick" Background="#D4EDDA" Width="100" Height="32"/>
+        <!-- Кнопки управления -->
+        <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button Content="Cancel" Click="OnCancelClick" Width="90" Height="32" Background="#2A221E" Foreground="#CCC"/>
+            <Button Content="Save" Click="OnSaveClick" Background="#2D5A27" Foreground="White" Width="100" Height="32"/>
         </StackPanel>
     </StackPanel>
 </Window>

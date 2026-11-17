@@ -1,20 +1,55 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="InformationSystemForTrackingExpenses.Views.RegisterWindow"
-        Title="Реєстрація"
-        Width="350" Height="340"
-        WindowStartupLocation="CenterScreen">
+        Title="Dark Terminal — Create Account" Width="380" Height="510"
+        Background="#121614" Foreground="#E0E0E0"
+        WindowStartupLocation="CenterScreen" CanResize="False">
 
-    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="260" Spacing="10">
-        <TextBlock Text="Реєстрація нового користувача" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,10"/>
+    <Border Margin="20" Padding="25" Background="#221C18" BorderBrush="#5C4033" BorderThickness="1" CornerRadius="8">
+        <StackPanel Spacing="12" VerticalAlignment="Center">
+            
+            <!-- Заголовок -->
+            <StackPanel Spacing="4" Margin="0,0,0,8">
+                <TextBlock Text="CREATE ACCOUNT" FontSize="18" FontWeight="Bold" Foreground="#D4A373" HorizontalAlignment="Center"/>
+                <TextBlock Text="Register new operator profile" FontSize="12" Foreground="#A39382" HorizontalAlignment="Center"/>
+            </StackPanel>
 
-        <TextBox x:Name="NameInput" PlaceholderText="Ім'я"/>
-        <TextBox x:Name="EmailInput" PlaceholderText="Email"/>
-        <TextBox x:Name="PasswordInput" PlaceholderText="Пароль" PasswordChar="*"/>
+            <!-- Имя -->
+            <StackPanel Spacing="3">
+                <TextBlock Text="Full Name" FontSize="11" Foreground="#A39382"/>
+                <TextBox x:Name="NameBox" Height="32" Background="#161210" Foreground="White" BorderBrush="#5C4033" Watermark="Ivan Ivanov"/>
+            </StackPanel>
 
-        <TextBlock x:Name="ErrorText" Foreground="Red" HorizontalAlignment="Center" IsVisible="False" TextWrapping="Wrap"/>
+            <!-- Email -->
+            <StackPanel Spacing="3">
+                <TextBlock Text="Email" FontSize="11" Foreground="#A39382"/>
+                <TextBox x:Name="EmailBox" Height="32" Background="#161210" Foreground="White" BorderBrush="#5C4033" Watermark="user@domain.com"/>
+            </StackPanel>
 
-        <Button Content="Зареєструватися" Click="OnRegisterClick" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
-        <Button Content="Назад до входу" Click="OnBackClick" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="Transparent"/>
-    </StackPanel>
+            <!-- Пароль -->
+            <StackPanel Spacing="3">
+                <TextBlock Text="Password" FontSize="11" Foreground="#A39382"/>
+                <TextBox x:Name="PasswordBox" PasswordChar="•" Height="32" Background="#161210" Foreground="White" BorderBrush="#5C4033"/>
+            </StackPanel>
+
+            <!-- Подтверждение пароля -->
+            <StackPanel Spacing="3">
+                <TextBlock Text="Confirm Password" FontSize="11" Foreground="#A39382"/>
+                <TextBox x:Name="ConfirmPasswordBox" PasswordChar="•" Height="32" Background="#161210" Foreground="White" BorderBrush="#5C4033"/>
+            </StackPanel>
+
+            <!-- Сообщение об ошибке -->
+            <TextBlock x:Name="ErrorText" Text="" FontSize="11" Foreground="#FF7B7B" HorizontalAlignment="Center" IsVisible="False"/>
+
+            <!-- Кнопка Регистрации -->
+            <Button Content="Create Profile" Click="OnRegisterClick" Height="36" Background="#8B5A2B" Foreground="White" FontWeight="Bold" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,8,0,0"/>
+
+            <!-- Возврат ко входу -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="5" Margin="0,4,0,0">
+                <TextBlock Text="Already registered?" FontSize="12" Foreground="#888" VerticalAlignment="Center"/>
+                <Button Content="Sign In" Click="OnBackToLoginClick" Background="Transparent" Foreground="#68B984" Padding="4,2" FontSize="12" FontWeight="Bold"/>
+            </StackPanel>
+
+        </StackPanel>
+    </Border>
 </Window>

@@ -41,6 +41,26 @@ namespace InformationSystemForTrackingExpenses.Views
             }
         }
 
+        private int GetNextId()
+        {
+            int maxId = 0;
+            foreach (var item in _repo.GetAll())
+            {
+                if (item.id > maxId) maxId = item.id;
+            }
+            return maxId + 1;
+        }
+
+        private void OnAddClick(object? sender, RoutedEventArgs e)
+        {
+            int newId = GetNextId();
+            var newCategory = new CategoriesTable(newId, "Нова категорія", "expense");
+            if (_repo.Add(newCategory))
+            {
+                LoadData();
+            }
+        }
+
         private void OnUpdateClick(object? sender, RoutedEventArgs e)
         {
             if (_selectedId <= 0) return;

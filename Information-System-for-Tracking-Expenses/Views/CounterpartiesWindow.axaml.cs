@@ -44,6 +44,26 @@ namespace InformationSystemForTrackingExpenses.Views
             }
         }
 
+        private int GetNextId()
+        {
+            int maxId = 0;
+            foreach (var item in _repo.GetAll())
+            {
+                if (item.id > maxId) maxId = item.id;
+            }
+            return maxId + 1;
+        }
+
+        private void OnAddClick(object? sender, RoutedEventArgs e)
+        {
+            int newId = GetNextId();
+            var newCounterparty = new CounterpartiesTable(newId, "Новий контрагент", "client", null, null, null);
+            if (_repo.Add(newCounterparty))
+            {
+                LoadData();
+            }
+        }
+
         private void OnUpdateClick(object? sender, RoutedEventArgs e)
         {
             if (_selectedId <= 0) return;

@@ -54,6 +54,7 @@
         </Border>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="10">
+            <Button Content="Add Employee" Click="OnAddClick" Background="#2D5A27" Foreground="White" Width="130" Height="32"/>
             <Button Content="Refresh List" Click="OnRefreshClick" Background="#2B3630" Foreground="#CCC" Width="110" Height="32"/>
         </StackPanel>
     </Grid>
