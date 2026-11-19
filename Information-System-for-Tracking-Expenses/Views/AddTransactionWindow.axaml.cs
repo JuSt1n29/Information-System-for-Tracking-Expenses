@@ -11,6 +11,7 @@ namespace InformationSystemForTrackingExpenses.Views
     {
         public TransactionsTable? CreatedTransaction { get; private set; }
         private readonly int _nextId;
+        private readonly int _userId;
 
         private readonly AccountsRep _accountsRep = new();
         private readonly CategoriesRep _categoriesRep = new();
@@ -22,10 +23,11 @@ namespace InformationSystemForTrackingExpenses.Views
         private List<CounterpartiesTable?> _counterpartiesList = new();
         private List<EmployeesTable?> _employeesList = new();
 
-        public AddTransactionWindow(int nextId)
+        public AddTransactionWindow(int nextId, int userId = 1)
         {
             InitializeComponent();
             _nextId = nextId;
+            _userId = userId > 0 ? userId : 1;
 
             TypeComboBox.SelectedIndex = 0;
             CurrencyComboBox.SelectedIndex = 0;
@@ -108,7 +110,7 @@ namespace InformationSystemForTrackingExpenses.Views
                 counterpartyId,
                 employeeId,
                 selectedCategory.id,
-                1,
+                _userId,
                 type,
                 amount,
                 currency,

@@ -1,29 +1,38 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using InformationSystemForTrackingExpenses.Repositories;
 
 namespace InformationSystemForTrackingExpenses.Views
 {
     public partial class LoginWindow : Window
     {
+        private readonly UsersRep _usersRep = new();
+
         public LoginWindow()
         {
             InitializeComponent();
+            _usersRep.EnsureDefaultAdminExists();
         }
 
         private void OnLoginClick(object? sender, RoutedEventArgs e)
         {
-            string email = EmailBox.Text?.Trim() ?? "";
+            string login = EmailBox.Text?.Trim() ?? "";
             string password = PasswordBox.Text ?? "";
 
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
             {
-                ShowError("Please enter both email and password.");
+                ShowError("Please enter both email/username and password.");
                 return;
             }
 
-            // Здесь можно подключить проверку через UsersRep (поиск пользователя в БД)
-            // Если всё верно — открываем MainWindow и закрываем окно логина:
-            var mainWindow = new MainWindow();
+            var user = _usersRep.Authenticate(login, password);
+            if (user == null)
+            {
+                ShowError("Invalid credentials.");
+                return;
+            }
+
+            var mainWindow = new MainWindow(user);
             mainWindow.Show();
             Close();
         }

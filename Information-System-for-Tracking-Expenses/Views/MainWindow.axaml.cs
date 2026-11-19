@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Media.Imaging;
 using InformationSystemForTrackingExpenses.Repositories;
 using InformationSystemForTrackingExpenses.Tables;
 
@@ -10,7 +12,8 @@ namespace InformationSystemForTrackingExpenses.Views
 {
     public partial class MainWindow : Window
     {
-        private TransactionsRep _transactionsRep = new TransactionsRep();
+        private readonly TransactionsRep _transactionsRep = new();
+        private UsersTable? _currentUser;
         private TransactionsTable? _selectedTransaction;
 
         private static readonly HashSet<string> HiddenColumns = new(StringComparer.OrdinalIgnoreCase)
@@ -18,10 +21,71 @@ namespace InformationSystemForTrackingExpenses.Views
             "id", "account_id", "counterparty_id", "employee_id", "category_id", "user_id"
         };
 
-        public MainWindow()
+        public MainWindow() : this(null)
+        {
+        }
+
+        public MainWindow(UsersTable? currentUser)
         {
             InitializeComponent();
+            _currentUser = currentUser;
+            ApplyRolePermissions();
+            RefreshHeaderUserDisplay();
             LoadData();
+        }
+
+        private bool IsAdmin => string.Equals(_currentUser?.role, "admin", StringComparison.OrdinalIgnoreCase);
+
+        private void ApplyRolePermissions()
+        {
+            EmployeesButton.IsVisible = IsAdmin;
+            UsersButton.IsVisible = IsAdmin;
+        }
+
+        private void RefreshHeaderUserDisplay()
+        {
+            if (_currentUser != null)
+            {
+                CurrentUserText.Text = $"{_currentUser.name} ({_currentUser.role})";
+                LoadBitmapToImage(HeaderAvatarImage, _currentUser.avatar_path);
+            }
+            else
+            {
+                CurrentUserText.Text = "Guest";
+                HeaderAvatarImage.Source = null;
+            }
+        }
+
+        private static void LoadBitmapToImage(Image target, string? path)
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(path) && File.Exists(path))
+                {
+                    using var stream = File.OpenRead(path);
+                    target.Source = new Bitmap(stream);
+                    return;
+                }
+            }
+            catch
+            {
+                // Очищаем при ошибке чтения файла
+            }
+            target.Source = null;
+        }
+
+        private async void OnOpenProfileClick(object? sender, RoutedEventArgs e)
+        {
+            if (_currentUser == null) return;
+
+            var profileWindow = new ProfileWindow(_currentUser);
+            await profileWindow.ShowDialog(this);
+
+            if (profileWindow.UpdatedUser != null)
+            {
+                _currentUser = profileWindow.UpdatedUser;
+                RefreshHeaderUserDisplay();
+            }
         }
 
         private void OnAutoGeneratingColumn(object? sender, DataGridAutoGeneratingColumnEventArgs e)
@@ -64,7 +128,8 @@ namespace InformationSystemForTrackingExpenses.Views
         private async void OnAddClick(object? sender, RoutedEventArgs e)
         {
             int nextId = _transactionsRep.GetNextId();
-            var addWindow = new AddTransactionWindow(nextId);
+            int userId = _currentUser?.id > 0 ? _currentUser.id : 1;
+            var addWindow = new AddTransactionWindow(nextId, userId);
 
             await addWindow.ShowDialog(this);
 
@@ -152,7 +217,18 @@ namespace InformationSystemForTrackingExpenses.Views
 
         private void OnOpenAccountsClick(object? sender, RoutedEventArgs e) => new AccountsWindow().ShowDialog(this);
         private void OnOpenCounterpartiesClick(object? sender, RoutedEventArgs e) => new CounterpartiesWindow().ShowDialog(this);
-        private void OnOpenEmployeesClick(object? sender, RoutedEventArgs e) => new EmployeesWindow().ShowDialog(this);
         private void OnOpenCategoriesClick(object? sender, RoutedEventArgs e) => new CategoriesWindow().ShowDialog(this);
+
+        private void OnOpenEmployeesClick(object? sender, RoutedEventArgs e)
+        {
+            if (!IsAdmin) return;
+            new EmployeesWindow().ShowDialog(this);
+        }
+
+        private void OnOpenUsersClick(object? sender, RoutedEventArgs e)
+        {
+            if (!IsAdmin) return;
+            new UsersWindow().ShowDialog(this);
+        }
     }
 }

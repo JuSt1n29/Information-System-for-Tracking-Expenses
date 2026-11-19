@@ -1,0 +1,62 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="InformationSystemForTrackingExpenses.Views.ProfileWindow"
+        Title="My Profile" Width="440" Height="560"
+        Background="#121614" Foreground="#E0E0E0"
+        WindowStartupLocation="CenterOwner" CanResize="False">
+
+    <Border Margin="16" Padding="20" Background="#1A1F1C" BorderBrush="#3A4D40" BorderThickness="1" CornerRadius="8">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="12">
+                <TextBlock Text="MY PROFILE" FontSize="18" FontWeight="Bold" Foreground="#D4A373" HorizontalAlignment="Center"/>
+                <TextBlock x:Name="RoleSubtitleText" Text="" FontSize="11" Foreground="#88A093" HorizontalAlignment="Center"/>
+
+                <!-- Аватар и управление фото -->
+                <StackPanel Spacing="8" HorizontalAlignment="Center" Margin="0,4,0,4">
+                    <Border Width="92" Height="92" CornerRadius="46" ClipToBounds="True"
+                            Background="#161210" BorderBrush="#D4A373" BorderThickness="2">
+                        <Image x:Name="AvatarPreviewImage" Stretch="UniformToFill"/>
+                    </Border>
+                    <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+                        <Button Content="Upload Photo" Click="OnSelectAvatarClick" Height="28" Padding="10,0"
+                                Background="#2B3630" Foreground="#E0E0E0"/>
+                        <Button Content="Remove Photo" Click="OnRemoveAvatarClick" Height="28" Padding="10,0"
+                                Background="#4E2A1D" Foreground="#FFA0A0"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Имя -->
+                <StackPanel Spacing="3">
+                    <TextBlock Text="Name *" FontSize="11" Foreground="#A39382"/>
+                    <TextBox x:Name="NameBox" Height="32" Background="#161210" Foreground="White" BorderBrush="#5C4033"/>
+                </StackPanel>
+
+                <!-- Email -->
+                <StackPanel Spacing="3">
+                    <TextBlock Text="Email *" FontSize="11" Foreground="#A39382"/>
+                    <TextBox x:Name="EmailBox" Height="32" Background="#161210" Foreground="White" BorderBrush="#5C4033"/>
+                </StackPanel>
+
+                <!-- Смена пароля -->
+                <StackPanel Spacing="3">
+                    <TextBlock Text="Current Password (required to change password)" FontSize="11" Foreground="#A39382"/>
+                    <TextBox x:Name="CurrentPasswordBox" PasswordChar="•" Height="32" Background="#161210" Foreground="White" BorderBrush="#5C4033"/>
+                </StackPanel>
+
+                <StackPanel Spacing="3">
+                    <TextBlock Text="New Password (leave empty to keep current)" FontSize="11" Foreground="#A39382"/>
+                    <TextBox x:Name="NewPasswordBox" PasswordChar="•" Height="32" Background="#161210" Foreground="White" BorderBrush="#5C4033"/>
+                </StackPanel>
+
+                <!-- Статус / Ошибка -->
+                <TextBlock x:Name="StatusText" Text="" FontSize="11" Foreground="#FF8A8A" TextWrapping="Wrap" IsVisible="False"/>
+
+                <!-- Кнопки -->
+                <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right" Margin="0,8,0,0">
+                    <Button Content="Cancel" Click="OnCancelClick" Width="90" Height="32" Background="#2A221E" Foreground="#CCC"/>
+                    <Button Content="Save" Click="OnSaveClick" Width="105" Height="32" Background="#2D5A27" Foreground="White" FontWeight="Bold"/>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Border>
+</Window>

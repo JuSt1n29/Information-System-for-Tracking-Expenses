@@ -9,14 +9,29 @@
 
     <Grid RowDefinitions="Auto, *, Auto, Auto" Margin="15" RowSpacing="10">
         
-        <!-- Меню / Навигация по справочникам -->
+        <!-- Меню / Навигация по справочникам и значок профиля в углу -->
         <Border Grid.Row="0" Background="#1B2E23" Margin="0,0,0,5" Padding="8" CornerRadius="6">
-            <StackPanel Orientation="Horizontal" Spacing="10">
-                <Button Content="Accounts" Click="OnOpenAccountsClick" Width="100" Background="#2D4F3C" Foreground="White"/>
-                <Button Content="Counterparties" Click="OnOpenCounterpartiesClick" Width="120" Background="#2D4F3C" Foreground="White"/>
-                <Button Content="Employees" Click="OnOpenEmployeesClick" Width="110" Background="#2D4F3C" Foreground="White"/>
-                <Button Content="Categories" Click="OnOpenCategoriesClick" Width="100" Background="#2D4F3C" Foreground="White"/>
-            </StackPanel>
+            <DockPanel LastChildFill="False">
+                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Spacing="10">
+                    <Button Content="Accounts" Click="OnOpenAccountsClick" Width="100" Background="#2D4F3C" Foreground="White"/>
+                    <Button Content="Counterparties" Click="OnOpenCounterpartiesClick" Width="120" Background="#2D4F3C" Foreground="White"/>
+                    <Button x:Name="EmployeesButton" Content="Employees" Click="OnOpenEmployeesClick" Width="110" Background="#2D4F3C" Foreground="White"/>
+                    <Button Content="Categories" Click="OnOpenCategoriesClick" Width="100" Background="#2D4F3C" Foreground="White"/>
+                    <Button x:Name="UsersButton" Content="Users" Click="OnOpenUsersClick" Width="100" Background="#4A3520" Foreground="#F5D0A9" IsVisible="False"/>
+                </StackPanel>
+
+                <!-- Кликабельный значок профиля в правом углу -->
+                <Button DockPanel.Dock="Right" Click="OnOpenProfileClick" Padding="6,2" Height="34"
+                        Background="#221C18" BorderBrush="#5C4033" BorderThickness="1" CornerRadius="6">
+                    <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                        <Border Width="24" Height="24" CornerRadius="12" ClipToBounds="True"
+                                Background="#2B3630" BorderBrush="#D4A373" BorderThickness="1">
+                            <Image x:Name="HeaderAvatarImage" Stretch="UniformToFill"/>
+                        </Border>
+                        <TextBlock x:Name="CurrentUserText" VerticalAlignment="Center" FontSize="12" Foreground="#E0E0E0"/>
+                    </StackPanel>
+                </Button>
+            </DockPanel>
         </Border>
 
         <!-- Таблица транзакций -->

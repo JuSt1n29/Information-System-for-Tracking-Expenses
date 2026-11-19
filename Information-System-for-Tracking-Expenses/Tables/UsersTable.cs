@@ -9,9 +9,10 @@ namespace InformationSystemForTrackingExpenses.Tables
         public string email { get; set; }
         public string password_hash { get; set; }
         public string role { get; set; }
+        public string? avatar_path { get; set; }
         public DateTime created_at { get; set; }
 
-        public UsersTable(int id, string name, string email, string password_hash, string role, DateTime created_at)
+        public UsersTable(int id, string name, string email, string password_hash, string role, DateTime created_at, string? avatar_path = null)
         {
             this.id = id;
             this.name = name;
@@ -19,6 +20,7 @@ namespace InformationSystemForTrackingExpenses.Tables
             this.password_hash = password_hash;
             this.role = role;
             this.created_at = created_at;
+            this.avatar_path = avatar_path;
         }
     }
 }

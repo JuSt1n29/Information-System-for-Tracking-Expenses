@@ -1,10 +1,15 @@
+using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using InformationSystemForTrackingExpenses.Repositories;
+using InformationSystemForTrackingExpenses.Tables;
 
 namespace InformationSystemForTrackingExpenses.Views
 {
     public partial class RegisterWindow : Window
     {
+        private readonly UsersRep _usersRep = new();
+
         public RegisterWindow()
         {
             InitializeComponent();
@@ -29,7 +34,19 @@ namespace InformationSystemForTrackingExpenses.Views
                 return;
             }
 
-           
+            if (_usersRep.GetByEmail(email) != null)
+            {
+                ShowError("User with this email already exists.");
+                return;
+            }
+
+            var newUser = new UsersTable(0, name, email, pass, "user", DateTime.Now);
+            if (!_usersRep.Add(newUser, isAlreadyHashed: false))
+            {
+                ShowError("Failed to register user.");
+                return;
+            }
+
             var loginWindow = new LoginWindow();
             loginWindow.Show();
             Close();
