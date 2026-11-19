@@ -9,39 +9,38 @@ namespace InformationSystemForTrackingExpenses.Repositories
     {
         private DB db = DB.getInstance();
 
-        public TransactionsTable GetbyID(int id)
-        {
-            foreach (TransactionsTable k in GetAll())
-                if (k.id == id) return k;
-            return null;
-        }
-
         public IEnumerable<TransactionsTable> GetAll()
         {
             List<TransactionsTable> list = new List<TransactionsTable>();
             try
             {
                 string query = @"SELECT 
-                    transaction_id, transaction_date, transaction_type, amount, currency, document_number, description,
+                    transaction_date, transaction_type, amount, currency, document_number, description,
                     account_name, account_type,
                     category_name, category_type,
                     counterparty_name, counterparty_type, counterparty_tax_number,
                     employee_name, employee_position,
                     user_name, user_email
-                FROM v_transactions_catalog";
+                FROM v_transactions_catalog
+                ORDER BY transaction_date DESC";
 
                 using (var reader = db.execSelect(query))
                 {
                     if (reader != null)
+                    {
                         while (reader.Read())
                         {
+                            string docNum = reader.IsDBNull(reader.GetOrdinal("document_number"))
+                                ? ""
+                                : reader.GetString("document_number");
+
                             list.Add(new TransactionsTable(
-                                reader.GetInt32("transaction_id"),
+                                0,
                                 reader.GetDateTime("transaction_date"),
                                 reader.GetString("transaction_type"),
                                 reader.GetDecimal("amount"),
                                 reader.GetString("currency"),
-                                reader.IsDBNull(reader.GetOrdinal("document_number")) ? "" : reader.GetString("document_number"),
+                                docNum,
                                 reader.IsDBNull(reader.GetOrdinal("description")) ? "" : reader.GetString("description"),
                                 reader.IsDBNull(reader.GetOrdinal("account_name")) ? null : reader.GetString("account_name"),
                                 reader.IsDBNull(reader.GetOrdinal("account_type")) ? null : reader.GetString("account_type"),
@@ -56,6 +55,7 @@ namespace InformationSystemForTrackingExpenses.Repositories
                                 reader.IsDBNull(reader.GetOrdinal("user_email")) ? null : reader.GetString("user_email")
                             ));
                         }
+                    }
                 }
             }
             catch (Exception e)
@@ -63,6 +63,21 @@ namespace InformationSystemForTrackingExpenses.Repositories
                 Console.WriteLine("Error in TransactionsRep.GetAll: " + e.Message);
             }
             return list;
+        }
+
+        public int GetNextId()
+        {
+            try
+            {
+                object? res = db.execScalar("SELECT COALESCE(MAX(id), 0) + 1 FROM transactions");
+                if (res != null && int.TryParse(res.ToString(), out int nextId))
+                    return nextId;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error in TransactionsRep.GetNextId: " + e.Message);
+            }
+            return 1;
         }
 
         public bool Add(TransactionsTable entity)
@@ -96,7 +111,10 @@ namespace InformationSystemForTrackingExpenses.Repositories
         {
             try
             {
-                return db.execSql($"DELETE FROM transactions WHERE id = {entity.id}");
+                string whereClause = BuildWhereClause(entity);
+                if (string.IsNullOrEmpty(whereClause)) return false;
+
+                return db.execSql($"DELETE FROM transactions WHERE {whereClause} LIMIT 1");
             }
             catch (Exception e)
             {
@@ -109,10 +127,13 @@ namespace InformationSystemForTrackingExpenses.Repositories
         {
             try
             {
+                string whereClause = BuildWhereClause(entity);
+                if (string.IsNullOrEmpty(whereClause)) return false;
+
                 string amountStr = entity.amount.ToString(CultureInfo.InvariantCulture);
                 string desc = (entity.description ?? "").Replace("'", "''");
 
-                string query = $"UPDATE transactions SET amount = {amountStr}, description = '{desc}' WHERE id = {entity.id}";
+                string query = $"UPDATE transactions SET amount = {amountStr}, description = '{desc}' WHERE {whereClause} LIMIT 1";
                 return db.execSql(query);
             }
             catch (Exception e)
@@ -120,6 +141,22 @@ namespace InformationSystemForTrackingExpenses.Repositories
                 Console.WriteLine("Error in TransactionsRep.Update: " + e.Message);
                 return false;
             }
+        }
+
+        private string BuildWhereClause(TransactionsTable entity)
+        {
+            if (entity.id > 0)
+                return $"id = {entity.id}";
+
+            if (!string.IsNullOrWhiteSpace(entity.document_number))
+            {
+                string safeDoc = entity.document_number.Trim().Replace("'", "''");
+                return $"document_number = '{safeDoc}'";
+            }
+
+            string dateStr = entity.transaction_date.ToString("yyyy-MM-dd HH:mm:ss");
+            string amountStr = entity.amount.ToString(CultureInfo.InvariantCulture);
+            return $"transaction_date = '{dateStr}' AND amount = {amountStr}";
         }
     }
 }

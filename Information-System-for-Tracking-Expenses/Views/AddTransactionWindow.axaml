@@ -1,66 +1,77 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="InformationSystemForTrackingExpenses.Views.AddTransactionWindow"
-        Title="New Transaction" Width="420" Height="680"
+        Title="New Transaction" Width="430" Height="690"
         Background="#161210" Foreground="#E0E0E0"
         WindowStartupLocation="CenterOwner" CanResize="False">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel Margin="20" Spacing="12">
-            <TextBlock Text="Create New Transaction" FontSize="18" FontWeight="Bold" Foreground="#D4A373" HorizontalAlignment="Center" Margin="0,0,0,5"/>
+        <StackPanel Margin="20" Spacing="11">
+            <TextBlock Text="Create New Transaction" FontSize="18" FontWeight="Bold" Foreground="#D4A373" HorizontalAlignment="Center" Margin="0,0,0,4"/>
 
-            <!-- Выбор Счета -->
+            <!-- Счёт -->
             <StackPanel Spacing="3">
-                <TextBlock Text="Account" FontSize="11" Foreground="#A39382"/>
+                <TextBlock Text="Account *" FontSize="11" Foreground="#A39382"/>
                 <ComboBox x:Name="AccountComboBox" Height="32" Background="#1F1815" Foreground="White" BorderBrush="#5C4033" HorizontalAlignment="Stretch"/>
             </StackPanel>
 
-            <!-- Выбор Контрагента -->
+            <!-- Категория -->
+            <StackPanel Spacing="3">
+                <TextBlock Text="Category *" FontSize="11" Foreground="#A39382"/>
+                <ComboBox x:Name="CategoryComboBox" Height="32" Background="#1F1815" Foreground="White" BorderBrush="#5C4033" HorizontalAlignment="Stretch"/>
+            </StackPanel>
+
+            <!-- Контрагент -->
             <StackPanel Spacing="3">
                 <TextBlock Text="Counterparty" FontSize="11" Foreground="#A39382"/>
                 <ComboBox x:Name="CounterpartyComboBox" Height="32" Background="#1F1815" Foreground="White" BorderBrush="#5C4033" HorizontalAlignment="Stretch"/>
             </StackPanel>
 
-            <!-- Выбор Сотрудника -->
+            <!-- Сотрудник -->
             <StackPanel Spacing="3">
                 <TextBlock Text="Employee" FontSize="11" Foreground="#A39382"/>
                 <ComboBox x:Name="EmployeeComboBox" Height="32" Background="#1F1815" Foreground="White" BorderBrush="#5C4033" HorizontalAlignment="Stretch"/>
             </StackPanel>
 
-            <!-- Выбор Категории -->
-            <StackPanel Spacing="3">
-                <TextBlock Text="Category" FontSize="11" Foreground="#A39382"/>
-                <ComboBox x:Name="CategoryComboBox" Height="32" Background="#1F1815" Foreground="White" BorderBrush="#5C4033" HorizontalAlignment="Stretch"/>
-            </StackPanel>
+            <!-- Тип и Валюта в одной строке -->
+            <Grid ColumnDefinitions="*, 12, 120">
+                <StackPanel Grid.Column="0" Spacing="3">
+                    <TextBlock Text="Type" FontSize="11" Foreground="#A39382"/>
+                    <ComboBox x:Name="TypeComboBox" Height="32" Background="#1F1815" Foreground="White" BorderBrush="#5C4033" HorizontalAlignment="Stretch">
+                        <ComboBoxItem Content="expense"/>
+                        <ComboBoxItem Content="income"/>
+                    </ComboBox>
+                </StackPanel>
 
-            <!-- Тип транзакции -->
-            <StackPanel Spacing="3">
-                <TextBlock Text="Type (expense / income)" FontSize="11" Foreground="#A39382"/>
-                <TextBox x:Name="TypeBox" Height="30" Text="expense" Background="#1F1815" Foreground="White" BorderBrush="#5C4033"/>
-            </StackPanel>
+                <StackPanel Grid.Column="2" Spacing="3">
+                    <TextBlock Text="Currency" FontSize="11" Foreground="#A39382"/>
+                    <ComboBox x:Name="CurrencyComboBox" Height="32" Background="#1F1815" Foreground="White" BorderBrush="#5C4033" HorizontalAlignment="Stretch">
+                        <ComboBoxItem Content="UAH"/>
+                        <ComboBoxItem Content="USD"/>
+                        <ComboBoxItem Content="EUR"/>
+                    </ComboBox>
+                </StackPanel>
+            </Grid>
 
             <!-- Сумма -->
             <StackPanel Spacing="3">
-                <TextBlock Text="Amount" FontSize="11" Foreground="#A39382"/>
-                <TextBox x:Name="AmountBox" Height="30" Background="#1F1815" Foreground="White" BorderBrush="#5C4033"/>
-            </StackPanel>
-
-            <!-- Валюта -->
-            <StackPanel Spacing="3">
-                <TextBlock Text="Currency" FontSize="11" Foreground="#A39382"/>
-                <TextBox x:Name="CurrencyBox" Height="30" Text="UAH" Background="#1F1815" Foreground="White" BorderBrush="#5C4033"/>
+                <TextBlock Text="Amount *" FontSize="11" Foreground="#A39382"/>
+                <TextBox x:Name="AmountBox" Height="32" Watermark="0.00" Background="#1F1815" Foreground="White" BorderBrush="#5C4033"/>
             </StackPanel>
 
             <!-- Описание -->
             <StackPanel Spacing="3">
                 <TextBlock Text="Description" FontSize="11" Foreground="#A39382"/>
-                <TextBox x:Name="DescriptionBox" Height="30" Background="#1F1815" Foreground="White" BorderBrush="#5C4033"/>
+                <TextBox x:Name="DescriptionBox" Height="32" Watermark="Optional note..." Background="#1F1815" Foreground="White" BorderBrush="#5C4033"/>
             </StackPanel>
 
-            <!-- Кнопки управления -->
-            <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right" Margin="0,15,0,0">
+            <!-- Сообщение об ошибке валидации -->
+            <TextBlock x:Name="ErrorText" Text="" FontSize="11" Foreground="#FF8A8A" TextWrapping="Wrap" IsVisible="False"/>
+
+            <!-- Кнопки -->
+            <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right" Margin="0,12,0,0">
                 <Button Content="Cancel" Click="OnCancelClick" Width="90" Height="32" Background="#2A221E" Foreground="#CCC"/>
-                <Button Content="Save" Click="OnSaveClick" Background="#2D5A27" Foreground="White" Width="100" Height="32"/>
+                <Button Content="Save" Click="OnSaveClick" Background="#2D5A27" Foreground="White" Width="105" Height="32"/>
             </StackPanel>
         </StackPanel>
     </ScrollViewer>

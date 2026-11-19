@@ -1,5 +1,6 @@
 using System;
-using System.Linq;
+using System.Collections.Generic;
+using System.Globalization;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using InformationSystemForTrackingExpenses.Repositories;
@@ -10,7 +11,12 @@ namespace InformationSystemForTrackingExpenses.Views
     public partial class MainWindow : Window
     {
         private TransactionsRep _transactionsRep = new TransactionsRep();
-        private int _selectedTransactionId = -1;
+        private TransactionsTable? _selectedTransaction;
+
+        private static readonly HashSet<string> HiddenColumns = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "id", "account_id", "counterparty_id", "employee_id", "category_id", "user_id"
+        };
 
         public MainWindow()
         {
@@ -18,13 +24,22 @@ namespace InformationSystemForTrackingExpenses.Views
             LoadData();
         }
 
+        private void OnAutoGeneratingColumn(object? sender, DataGridAutoGeneratingColumnEventArgs e)
+        {
+            if (e.PropertyName != null && HiddenColumns.Contains(e.PropertyName))
+            {
+                e.Cancel = true;
+            }
+        }
+
         private void LoadData()
         {
             TransactionsGrid.ItemsSource = null;
             TransactionsGrid.ItemsSource = _transactionsRep.GetAll();
-            
-            // Скрываем панель редактирования при обновлении списка
+
+            _selectedTransaction = null;
             ActionPanel.IsVisible = false;
+            StatusText.IsVisible = false;
             TransactionsGrid.SelectedItem = null;
         }
 
@@ -32,39 +47,27 @@ namespace InformationSystemForTrackingExpenses.Views
         {
             if (TransactionsGrid.SelectedItem is TransactionsTable item)
             {
-                _selectedTransactionId = item.id;
-                EditAmountBox.Text = item.amount.ToString();
+                _selectedTransaction = item;
+                DocumentBox.Text = item.document_number;
+                EditAmountBox.Text = item.amount.ToString(CultureInfo.InvariantCulture);
                 EditDescriptionBox.Text = item.description;
-                UpdateIdBox.Text = item.id.ToString();
-
-                // Показываем панель управления при выборе строки
+                StatusText.IsVisible = false;
                 ActionPanel.IsVisible = true;
             }
             else
             {
+                _selectedTransaction = null;
                 ActionPanel.IsVisible = false;
             }
         }
 
-        private int GetNextId()
-        {
-            int maxId = 0;
-            foreach (var item in _transactionsRep.GetAll())
-            {
-                if (item.id > maxId) maxId = item.id;
-            }
-            return maxId + 1;
-        }
-
-        // Открытие формы добавления в виде модального окна
         private async void OnAddClick(object? sender, RoutedEventArgs e)
         {
-            int nextId = GetNextId();
+            int nextId = _transactionsRep.GetNextId();
             var addWindow = new AddTransactionWindow(nextId);
-            
+
             await addWindow.ShowDialog(this);
 
-            // Проверяем, была ли создана транзакция в окне ввода
             if (addWindow.CreatedTransaction != null)
             {
                 if (_transactionsRep.Add(addWindow.CreatedTransaction))
@@ -76,51 +79,77 @@ namespace InformationSystemForTrackingExpenses.Views
 
         private void OnUpdateClick(object? sender, RoutedEventArgs e)
         {
-            if (_selectedTransactionId <= 0) return;
-            if (!decimal.TryParse(EditAmountBox.Text, out decimal amount)) return;
+            if (_selectedTransaction == null) return;
+
+            if (!TryParsePositiveDecimal(EditAmountBox.Text, out decimal amount))
+            {
+                ShowStatus("Введите корректную сумму больше 0.");
+                return;
+            }
 
             string description = EditDescriptionBox.Text?.Trim() ?? "";
 
-            var existingItems = _transactionsRep.GetAll();
-            
-            // Ищем текущую транзакцию в списке
-            TransactionsTable? current = existingItems.FirstOrDefault(x => x.id == _selectedTransactionId);
+            var updated = new TransactionsTable(
+                _selectedTransaction.id,
+                _selectedTransaction.transaction_date,
+                _selectedTransaction.type,
+                amount,
+                _selectedTransaction.currency,
+                _selectedTransaction.document_number,
+                description,
+                _selectedTransaction.account_name,
+                _selectedTransaction.account_type,
+                _selectedTransaction.category_name,
+                _selectedTransaction.category_type,
+                _selectedTransaction.counterparty_name,
+                _selectedTransaction.counterparty_type,
+                _selectedTransaction.counterparty_tax_number,
+                _selectedTransaction.employee_name,
+                _selectedTransaction.employee_position,
+                _selectedTransaction.user_name,
+                _selectedTransaction.user_email
+            );
 
-            if (current != null)
+            if (_transactionsRep.Update(updated))
             {
-                // Передаем обновленные данные через стандартный конструктор (ID счетов/категорий передаем как дефолтные, так как они управляются на уровне БД/вью)
-                var updatedTransaction = new TransactionsTable(
-                    current.id, 1, null, null, 1, 1, current.type, amount, 
-                    current.currency, current.transaction_date, description, current.document_number
-                );
-
-                if (_transactionsRep.Update(updatedTransaction))
-                {
-                    LoadData();
-                }
+                LoadData();
+            }
+            else
+            {
+                ShowStatus("Не удалось обновить транзакцию в базе данных.");
             }
         }
 
         private void OnDeleteClick(object? sender, RoutedEventArgs e)
         {
-            if (_selectedTransactionId <= 0) return;
+            if (_selectedTransaction == null) return;
 
-            var emptyTransaction = new TransactionsTable(
-                _selectedTransactionId, 0, null, null, 0, 0, "", 0, "", DateTime.Now, "", ""
-            );
-
-            if (_transactionsRep.Delete(emptyTransaction))
+            if (_transactionsRep.Delete(_selectedTransaction))
             {
                 LoadData();
             }
+            else
+            {
+                ShowStatus("Не удалось удалить транзакцию из базы данных.");
+            }
         }
 
-        private void OnRefreshClick(object? sender, RoutedEventArgs e)
+        private void OnRefreshClick(object? sender, RoutedEventArgs e) => LoadData();
+
+        private void ShowStatus(string message)
         {
-            LoadData();
+            StatusText.Text = message;
+            StatusText.IsVisible = true;
         }
 
-        // Открытие справочников
+        public static bool TryParsePositiveDecimal(string? input, out decimal result)
+        {
+            result = 0;
+            if (string.IsNullOrWhiteSpace(input)) return false;
+            string normalized = input.Trim().Replace(',', '.');
+            return decimal.TryParse(normalized, NumberStyles.Number, CultureInfo.InvariantCulture, out result) && result > 0;
+        }
+
         private void OnOpenAccountsClick(object? sender, RoutedEventArgs e) => new AccountsWindow().ShowDialog(this);
         private void OnOpenCounterpartiesClick(object? sender, RoutedEventArgs e) => new CounterpartiesWindow().ShowDialog(this);
         private void OnOpenEmployeesClick(object? sender, RoutedEventArgs e) => new EmployeesWindow().ShowDialog(this);

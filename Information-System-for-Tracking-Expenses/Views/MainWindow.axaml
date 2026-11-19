@@ -2,14 +2,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="InformationSystemForTrackingExpenses.Views.MainWindow"
         Title="FinancialApp - Transactions"
-        Width="950" Height="600"
+        Width="1050" Height="620"
         Background="#121614"
         Foreground="#E0E0E0"
         WindowStartupLocation="CenterScreen">
 
     <Grid RowDefinitions="Auto, *, Auto, Auto" Margin="15" RowSpacing="10">
         
-        <!-- Меню / Навигация по справочникам (Темно-зеленый стиль) -->
+        <!-- Меню / Навигация по справочникам -->
         <Border Grid.Row="0" Background="#1B2E23" Margin="0,0,0,5" Padding="8" CornerRadius="6">
             <StackPanel Orientation="Horizontal" Spacing="10">
                 <Button Content="Accounts" Click="OnOpenAccountsClick" Width="100" Background="#2D4F3C" Foreground="White"/>
@@ -19,9 +19,11 @@
             </StackPanel>
         </Border>
 
-        <!-- Таблица транзакций (Темная тема) -->
+        <!-- Таблица транзакций -->
         <DataGrid Grid.Row="1" x:Name="TransactionsGrid"
                   AutoGenerateColumns="True"
+                  IsReadOnly="True"
+                  AutoGeneratingColumn="OnAutoGeneratingColumn"
                   SelectionMode="Single"
                   SelectionChanged="OnSelectionChanged"
                   GridLinesVisibility="All"
@@ -30,26 +32,27 @@
                   Foreground="#E0E0E0"
                   BorderBrush="#3A4D40" BorderThickness="1"/>
 
-        <!-- Панель действий с выбранной строкой (Коричнево-черный стиль) -->
+        <!-- Панель действий с выбранной строкой -->
         <Border Grid.Row="2" x:Name="ActionPanel" IsVisible="False" Background="#221C18" Margin="0,5" Padding="10" CornerRadius="6">
             <StackPanel Spacing="8">
                 <TextBlock Text="Selected Transaction Management:" FontWeight="Bold" FontSize="12" Foreground="#D4A373" Margin="2,0,0,0"/>
                 <StackPanel Orientation="Horizontal" Spacing="10">
                     <StackPanel Spacing="2">
+                        <TextBlock Text="Document" FontSize="10" Foreground="#A39382"/>
+                        <TextBox x:Name="DocumentBox" Width="110" Height="28" Background="#161210" Foreground="#A39382" BorderBrush="#5C4033" IsReadOnly="True"/>
+                    </StackPanel>
+                    <StackPanel Spacing="2">
                         <TextBlock Text="Amount" FontSize="10" Foreground="#A39382"/>
-                        <TextBox x:Name="EditAmountBox" Width="90" Height="28" Background="#161210" Foreground="White" BorderBrush="#5C4033"/>
+                        <TextBox x:Name="EditAmountBox" Width="110" Height="28" Background="#161210" Foreground="White" BorderBrush="#5C4033"/>
                     </StackPanel>
                     <StackPanel Spacing="2">
                         <TextBlock Text="Description" FontSize="10" Foreground="#A39382"/>
-                        <TextBox x:Name="EditDescriptionBox" Width="220" Height="28" Background="#161210" Foreground="White" BorderBrush="#5C4033"/>
-                    </StackPanel>
-                    <StackPanel Spacing="2">
-                        <TextBlock Text="ID" FontSize="10" Foreground="#A39382"/>
-                        <TextBox x:Name="UpdateIdBox" Width="60" Height="28" Background="#161210" Foreground="#888" BorderBrush="#5C4033" IsReadOnly="True"/>
+                        <TextBox x:Name="EditDescriptionBox" Width="260" Height="28" Background="#161210" Foreground="White" BorderBrush="#5C4033"/>
                     </StackPanel>
                     <Button Content="Update" Click="OnUpdateClick" Background="#8B5A2B" Foreground="White" Width="100" VerticalAlignment="Bottom" Height="28"/>
                     <Button Content="Delete" Click="OnDeleteClick" Background="#4E2A1D" Foreground="#FFA0A0" Width="100" VerticalAlignment="Bottom" Height="28"/>
                 </StackPanel>
+                <TextBlock x:Name="StatusText" Text="" FontSize="11" Foreground="#FF8A8A" IsVisible="False"/>
             </StackPanel>
         </Border>
 
