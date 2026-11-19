@@ -58,62 +58,67 @@ namespace InformationSystemForTrackingExpenses.Repositories
                         }
                 }
             }
-            catch (Exception e) 
-            { 
-                Console.WriteLine("Error in TransactionsRep.GetAll: " + e.Message); 
+            catch (Exception e)
+            {
+                Console.WriteLine("Error in TransactionsRep.GetAll: " + e.Message);
             }
             return list;
         }
 
         public bool Add(TransactionsTable entity)
         {
-            try 
-            { 
+            try
+            {
                 string amountStr = entity.amount.ToString(CultureInfo.InvariantCulture);
                 string dateStr = entity.transaction_date.ToString("yyyy-MM-dd HH:mm:ss");
-                string desc = string.IsNullOrEmpty(entity.description) ? "" : entity.description;
-                string docNum = string.IsNullOrEmpty(entity.document_number) ? "" : entity.document_number;
-                
-                // Зберігаємо за замовчуванням у таблицю (тут ID потрібні для зв'язків)
-                string query = $"INSERT INTO transactions (account_id, category_id, user_id, type, amount, currency, transaction_date, description, document_number) " +
-                               $"VALUES (1, 1, 1, '{entity.type}', {amountStr}, '{entity.currency}', '{dateStr}', '{desc}', '{docNum}')";
+                string desc = (entity.description ?? "").Replace("'", "''");
+                string docNum = (entity.document_number ?? "").Replace("'", "''");
+                string type = (entity.type ?? "expense").Replace("'", "''");
+                string currency = (entity.currency ?? "UAH").Replace("'", "''");
 
-                return db.execSql(query); 
+                string counterpartySql = entity.counterparty_id.HasValue ? entity.counterparty_id.Value.ToString() : "NULL";
+                string employeeSql = entity.employee_id.HasValue ? entity.employee_id.Value.ToString() : "NULL";
+
+                string query =
+                    "INSERT INTO transactions (id, account_id, counterparty_id, employee_id, category_id, user_id, type, amount, currency, transaction_date, description, document_number) " +
+                    $"VALUES ({entity.id}, {entity.account_id}, {counterpartySql}, {employeeSql}, {entity.category_id}, {entity.user_id}, '{type}', {amountStr}, '{currency}', '{dateStr}', '{desc}', '{docNum}')";
+
+                return db.execSql(query);
             }
-            catch (Exception e) 
-            { 
-                Console.WriteLine("Error in TransactionsRep.Add: " + e.Message); 
-                return false; 
+            catch (Exception e)
+            {
+                Console.WriteLine("Error in TransactionsRep.Add: " + e.Message);
+                return false;
             }
         }
 
         public bool Delete(TransactionsTable entity)
         {
-            try 
-            { 
-                return db.execSql($"DELETE FROM transactions WHERE id = {entity.id}"); 
+            try
+            {
+                return db.execSql($"DELETE FROM transactions WHERE id = {entity.id}");
             }
-            catch (Exception e) 
-            { 
-                Console.WriteLine("Error in TransactionsRep.Delete: " + e.Message); 
-                return false; 
+            catch (Exception e)
+            {
+                Console.WriteLine("Error in TransactionsRep.Delete: " + e.Message);
+                return false;
             }
         }
 
         public bool Update(TransactionsTable entity)
         {
-            try 
-            { 
+            try
+            {
                 string amountStr = entity.amount.ToString(CultureInfo.InvariantCulture);
-                string desc = string.IsNullOrEmpty(entity.description) ? "" : entity.description;
+                string desc = (entity.description ?? "").Replace("'", "''");
 
                 string query = $"UPDATE transactions SET amount = {amountStr}, description = '{desc}' WHERE id = {entity.id}";
-                return db.execSql(query); 
+                return db.execSql(query);
             }
-            catch (Exception e) 
-            { 
-                Console.WriteLine("Error in TransactionsRep.Update: " + e.Message); 
-                return false; 
+            catch (Exception e)
+            {
+                Console.WriteLine("Error in TransactionsRep.Update: " + e.Message);
+                return false;
             }
         }
     }

@@ -10,7 +10,7 @@
             
             <!-- Заголовок -->
             <StackPanel Spacing="4" Margin="0,0,0,10">
-                <TextBlock Text="DARK TERMINAL" FontSize="20" FontWeight="Bold" Foreground="#D4A373" HorizontalAlignment="Center"/>
+                <TextBlock Text="INFO SYSTEM" FontSize="20" FontWeight="Bold" Foreground="#D4A373" HorizontalAlignment="Center"/>
                 <TextBlock Text="Financial Tracking System" FontSize="12" Foreground="#88A093" HorizontalAlignment="Center"/>
             </StackPanel>
 

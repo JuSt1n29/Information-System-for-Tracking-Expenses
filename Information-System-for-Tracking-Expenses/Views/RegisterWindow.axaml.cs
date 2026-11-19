@@ -29,8 +29,7 @@ namespace InformationSystemForTrackingExpenses.Views
                 return;
             }
 
-            // Здесь можно добавить сохранение нового пользователя в таблицу users через UsersRep
-            // После успешной регистрации возвращаемся на окно логина:
+           
             var loginWindow = new LoginWindow();
             loginWindow.Show();
             Close();

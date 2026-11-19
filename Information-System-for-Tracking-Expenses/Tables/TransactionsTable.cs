@@ -12,7 +12,14 @@ namespace InformationSystemForTrackingExpenses.Tables
         public string document_number { get; set; }
         public string description { get; set; }
 
-        // Только реальные текстовые данные из вьюхи (никаких ID)
+        // Свойства ID для добавления и обновления в БД
+        public int account_id { get; set; }
+        public int? counterparty_id { get; set; }
+        public int? employee_id { get; set; }
+        public int category_id { get; set; }
+        public int user_id { get; set; }
+
+        // Текстовые данные из вьюхи
         public string? account_name { get; set; }
         public string? account_type { get; set; }
 
@@ -58,12 +65,17 @@ namespace InformationSystemForTrackingExpenses.Tables
             this.user_email = user_email;
         }
 
-        // 2. Конструктор для создания/удаления (если нужен для AddTransactionWindow)
+        // 2. Конструктор для создания/добавления транзакций
         public TransactionsTable(int id, int account_id, int? counterparty_id, int? employee_id, 
             int category_id, int user_id, string type, decimal amount, 
             string currency, DateTime transaction_date, string description, string document_number)
         {
             this.id = id;
+            this.account_id = account_id;
+            this.counterparty_id = counterparty_id;
+            this.employee_id = employee_id;
+            this.category_id = category_id;
+            this.user_id = user_id;
             this.type = type;
             this.amount = amount;
             this.currency = currency;
