@@ -1,3 +1,4 @@
+using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using InformationSystemForTrackingExpenses.Repositories;
@@ -7,8 +8,8 @@ namespace InformationSystemForTrackingExpenses.Views
 {
     public partial class CategoriesWindow : Window
     {
-        private CategoriesRep _repo = new CategoriesRep();
-        private int _selectedId = -1;
+        private readonly CategoriesRep _repo = new();
+        private CategoriesTable? _selectedItem;
 
         public CategoriesWindow()
         {
@@ -16,29 +17,39 @@ namespace InformationSystemForTrackingExpenses.Views
             LoadData();
         }
 
+        private void OnAutoGeneratingColumn(object? sender, DataGridAutoGeneratingColumnEventArgs e)
+        {
+            if (string.Equals(e.PropertyName, "id", StringComparison.OrdinalIgnoreCase))
+            {
+                e.Cancel = true;
+            }
+        }
+
         private void LoadData()
         {
             CategoriesGrid.ItemsSource = null;
             CategoriesGrid.ItemsSource = _repo.GetAll();
-            ActionPanel.IsVisible = false;
-            CategoriesGrid.SelectedItem = null;
+            ResetForm();
         }
 
-        private void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+        private void ResetForm()
         {
-            if (CategoriesGrid.SelectedItem is CategoriesTable item)
-            {
-                _selectedId = item.id;
-                EditNameBox.Text = item.name;
-                EditTypeBox.Text = item.type;
-                UpdateIdBox.Text = item.id.ToString();
+            _selectedItem = null;
+            CategoriesGrid.SelectedItem = null;
 
-                ActionPanel.IsVisible = true;
-            }
-            else
-            {
-                ActionPanel.IsVisible = false;
-            }
+            EditNameBox.Text = "";
+            EditTypeBox.SelectedIndex = 0;
+
+            PanelTitleText.Text = "Add New Category:";
+            AddButton.IsVisible = true;
+            UpdateButton.IsVisible = false;
+            DeleteButton.IsVisible = false;
+            StatusText.IsVisible = false;
+        }
+
+        private string GetSelectedType()
+        {
+            return (EditTypeBox.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "expense";
         }
 
         private int GetNextId()
@@ -51,43 +62,90 @@ namespace InformationSystemForTrackingExpenses.Views
             return maxId + 1;
         }
 
+        private void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+        {
+            if (CategoriesGrid.SelectedItem is CategoriesTable item)
+            {
+                _selectedItem = item;
+                EditNameBox.Text = item.name;
+                EditTypeBox.SelectedIndex = string.Equals(item.type, "income", StringComparison.OrdinalIgnoreCase) ? 1 : 0;
+
+                PanelTitleText.Text = $"Selected Category ({item.name}):";
+                AddButton.IsVisible = false;
+                UpdateButton.IsVisible = true;
+                DeleteButton.IsVisible = true;
+                StatusText.IsVisible = false;
+            }
+            else if (CategoriesGrid.SelectedItem == null && _selectedItem != null)
+            {
+                ResetForm();
+            }
+        }
+
         private void OnAddClick(object? sender, RoutedEventArgs e)
         {
-            int newId = GetNextId();
-            var newCategory = new CategoriesTable(newId, "Нова категорія", "expense");
-            if (_repo.Add(newCategory))
+            string name = EditNameBox.Text?.Trim() ?? "";
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                ShowStatus("Name cannot be empty.");
+                return;
+            }
+
+            var created = new CategoriesTable(GetNextId(), name, GetSelectedType());
+            if (_repo.Add(created))
             {
                 LoadData();
+            }
+            else
+            {
+                ShowStatus("Failed to add category.");
             }
         }
 
         private void OnUpdateClick(object? sender, RoutedEventArgs e)
         {
-            if (_selectedId <= 0) return;
+            if (_selectedItem == null) return;
 
-            var updated = new CategoriesTable(
-                _selectedId,
-                EditNameBox.Text?.Trim() ?? "",
-                EditTypeBox.Text?.Trim() ?? ""
-            );
+            string name = EditNameBox.Text?.Trim() ?? "";
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                ShowStatus("Name cannot be empty.");
+                return;
+            }
 
+            var updated = new CategoriesTable(_selectedItem.id, name, GetSelectedType());
             if (_repo.Update(updated))
             {
                 LoadData();
+            }
+            else
+            {
+                ShowStatus("Failed to update category.");
             }
         }
 
         private void OnDeleteClick(object? sender, RoutedEventArgs e)
         {
-            if (_selectedId <= 0) return;
+            if (_selectedItem == null) return;
 
-            var empty = new CategoriesTable(_selectedId, "", "");
-            if (_repo.Delete(empty))
+            if (_repo.Delete(_selectedItem))
             {
                 LoadData();
             }
+            else
+            {
+                ShowStatus("Failed to delete category.");
+            }
         }
 
+        private void OnClearClick(object? sender, RoutedEventArgs e) => ResetForm();
+
         private void OnRefreshClick(object? sender, RoutedEventArgs e) => LoadData();
+
+        private void ShowStatus(string message)
+        {
+            StatusText.Text = message;
+            StatusText.IsVisible = true;
+        }
     }
 }
