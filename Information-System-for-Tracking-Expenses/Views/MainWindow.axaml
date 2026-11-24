@@ -1,80 +1,303 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="InformationSystemForTrackingExpenses.Views.MainWindow"
-        Title="FinancialApp - Transactions"
-        Width="1050" Height="620"
-        Background="#121614"
-        Foreground="#E0E0E0"
+        Title="FinancialApp — Transactions"
+        Width="1280" Height="760"
+        MinWidth="1050" MinHeight="640"
+        Background="#0F172A"
+        Foreground="#F8FAFC"
         WindowStartupLocation="CenterScreen">
 
-    <Grid RowDefinitions="Auto, *, Auto, Auto" Margin="15" RowSpacing="10">
-        
-        <!-- Меню / Навигация по справочникам и значок профиля в углу -->
-        <Border Grid.Row="0" Background="#1B2E23" Margin="0,0,0,5" Padding="8" CornerRadius="6">
-            <DockPanel LastChildFill="False">
-                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Spacing="10">
-                    <Button Content="Accounts" Click="OnOpenAccountsClick" Width="100" Background="#2D4F3C" Foreground="White"/>
-                    <Button Content="Counterparties" Click="OnOpenCounterpartiesClick" Width="120" Background="#2D4F3C" Foreground="White"/>
-                    <Button x:Name="EmployeesButton" Content="Employees" Click="OnOpenEmployeesClick" Width="110" Background="#2D4F3C" Foreground="White"/>
-                    <Button Content="Categories" Click="OnOpenCategoriesClick" Width="100" Background="#2D4F3C" Foreground="White"/>
-                    <Button x:Name="UsersButton" Content="Users" Click="OnOpenUsersClick" Width="100" Background="#4A3520" Foreground="#F5D0A9" IsVisible="False"/>
+    <Window.Styles>
+        <Style Selector="Button.navBtn">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#94A3B8"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="14,10"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+        </Style>
+        <Style Selector="Button.navBtn:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#1E293B"/>
+            <Setter Property="TextBlock.Foreground" Value="#F8FAFC"/>
+        </Style>
+        <Style Selector="Button.navBtnActive">
+            <Setter Property="Background" Value="#132A2E"/>
+            <Setter Property="Foreground" Value="#10B981"/>
+            <Setter Property="BorderBrush" Value="#10B981"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="14,10"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
+        <Style Selector="Button.filterPill">
+            <Setter Property="Background" Value="#1E293B"/>
+            <Setter Property="Foreground" Value="#94A3B8"/>
+            <Setter Property="BorderBrush" Value="#334155"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="14"/>
+            <Setter Property="Padding" Value="12,5"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+        <Style Selector="Button.filterPillActive">
+            <Setter Property="Background" Value="#10B981"/>
+            <Setter Property="Foreground" Value="#06281E"/>
+            <Setter Property="BorderBrush" Value="#10B981"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="14"/>
+            <Setter Property="Padding" Value="12,5"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
+        <Style Selector="TextBox.darkInput">
+            <Setter Property="Background" Value="#0F172A"/>
+            <Setter Property="Foreground" Value="#F8FAFC"/>
+            <Setter Property="BorderBrush" Value="#334155"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="10,6"/>
+        </Style>
+        <Style Selector="ComboBox.darkCombo">
+            <Setter Property="Background" Value="#1E293B"/>
+            <Setter Property="Foreground" Value="#F8FAFC"/>
+            <Setter Property="BorderBrush" Value="#334155"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid ColumnDefinitions="240, *">
+
+        <!-- ЛЕВЫЙ САЙДБАР НАВИГАЦИИ -->
+        <Border Grid.Column="0" Background="#111827" BorderBrush="#1E293B" BorderThickness="0,0,1,0" Padding="14,18">
+            <DockPanel LastChildFill="True">
+                <StackPanel DockPanel.Dock="Top" Spacing="14" Margin="0,0,0,18">
+                    <StackPanel Orientation="Horizontal" Spacing="9" Margin="4,0">
+                        <Border Width="10" Height="10" CornerRadius="5" Background="#10B981" VerticalAlignment="Center"/>
+                        <TextBlock Text="FinancialApp" FontSize="18" FontWeight="Bold" Foreground="#F8FAFC"/>
+                    </StackPanel>
+
+                    <Button Click="OnOpenProfileClick" Background="#1E293B" BorderBrush="#334155" BorderThickness="1"
+                            CornerRadius="8" Padding="10,8" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left">
+                        <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                            <Border Width="32" Height="32" CornerRadius="16" ClipToBounds="True"
+                                    Background="#0F172A" BorderBrush="#10B981" BorderThickness="1.5">
+                                <Image x:Name="HeaderAvatarImage" Stretch="UniformToFill"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock x:Name="CurrentUserText" Text="admin (admin)" FontSize="12" FontWeight="SemiBold" Foreground="#F8FAFC"/>
+                                <TextBlock Text="Налаштування профілю" FontSize="10" Foreground="#94A3B8"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
 
-                <!-- Кликабельный значок профиля в правом углу -->
-                <Button DockPanel.Dock="Right" Click="OnOpenProfileClick" Padding="6,2" Height="34"
-                        Background="#221C18" BorderBrush="#5C4033" BorderThickness="1" CornerRadius="6">
-                    <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                        <Border Width="24" Height="24" CornerRadius="12" ClipToBounds="True"
-                                Background="#2B3630" BorderBrush="#D4A373" BorderThickness="1">
-                            <Image x:Name="HeaderAvatarImage" Stretch="UniformToFill"/>
-                        </Border>
-                        <TextBlock x:Name="CurrentUserText" VerticalAlignment="Center" FontSize="12" Foreground="#E0E0E0"/>
-                    </StackPanel>
-                </Button>
+                <StackPanel DockPanel.Dock="Bottom" Spacing="6" Margin="0,12,0,0">
+                    <Button Click="OnLogoutClick" Classes="navBtn" Foreground="#F87171">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Path Classes="linealIcon" Data="{StaticResource IconLogout}" Stroke="#F87171"/>
+                            <TextBlock Text="Вийти з акаунту" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <StackPanel Spacing="6">
+                    <TextBlock Text="РОЗДІЛИ СИСТЕМИ" FontSize="10" FontWeight="Bold" Foreground="#64748B" Margin="10,0,0,4"/>
+
+                    <Button Classes="navBtnActive">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Path Classes="linealIcon" Data="{StaticResource IconTransactions}" Stroke="#10B981"/>
+                            <TextBlock Text="Transactions" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Click="OnOpenAccountsClick" Classes="navBtn">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Path Classes="linealIcon" Data="{StaticResource IconAccounts}" Stroke="#94A3B8"/>
+                            <TextBlock Text="Accounts" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Click="OnOpenCounterpartiesClick" Classes="navBtn">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Path Classes="linealIcon" Data="{StaticResource IconCounterparties}" Stroke="#94A3B8"/>
+                            <TextBlock Text="Counterparties" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button x:Name="EmployeesButton" Click="OnOpenEmployeesClick" Classes="navBtn">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Path Classes="linealIcon" Data="{StaticResource IconEmployees}" Stroke="#94A3B8"/>
+                            <TextBlock Text="Employees" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Click="OnOpenCategoriesClick" Classes="navBtn">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Path Classes="linealIcon" Data="{StaticResource IconCategories}" Stroke="#94A3B8"/>
+                            <TextBlock Text="Categories" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button x:Name="UsersButton" Click="OnOpenUsersClick" Classes="navBtn" Foreground="#FBBF24" IsVisible="False">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Path Classes="linealIcon" Data="{StaticResource IconUsers}" Stroke="#FBBF24"/>
+                            <TextBlock Text="Users" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
             </DockPanel>
         </Border>
 
-        <!-- Таблица транзакций -->
-        <DataGrid Grid.Row="1" x:Name="TransactionsGrid"
-                  AutoGenerateColumns="True"
-                  IsReadOnly="True"
-                  AutoGeneratingColumn="OnAutoGeneratingColumn"
-                  SelectionMode="Single"
-                  SelectionChanged="OnSelectionChanged"
-                  GridLinesVisibility="All"
-                  Background="#1A1F1C"
-                  RowBackground="#1A1F1C"
-                  Foreground="#E0E0E0"
-                  BorderBrush="#3A4D40" BorderThickness="1"/>
+        <!-- ПРАВАЯ РАБОЧАЯ ОБЛАСТЬ -->
+        <Grid Grid.Column="1" RowDefinitions="Auto, Auto, *, Auto, Auto" Margin="20,16" RowSpacing="12">
 
-        <!-- Панель действий с выбранной строкой -->
-        <Border Grid.Row="2" x:Name="ActionPanel" IsVisible="False" Background="#221C18" Margin="0,5" Padding="10" CornerRadius="6">
-            <StackPanel Spacing="8">
-                <TextBlock Text="Selected Transaction Management:" FontWeight="Bold" FontSize="12" Foreground="#D4A373" Margin="2,0,0,0"/>
-                <StackPanel Orientation="Horizontal" Spacing="10">
-                    <StackPanel Spacing="2">
-                        <TextBlock Text="Document" FontSize="10" Foreground="#A39382"/>
-                        <TextBox x:Name="DocumentBox" Width="110" Height="28" Background="#161210" Foreground="#A39382" BorderBrush="#5C4033" IsReadOnly="True"/>
-                    </StackPanel>
-                    <StackPanel Spacing="2">
-                        <TextBlock Text="Amount" FontSize="10" Foreground="#A39382"/>
-                        <TextBox x:Name="EditAmountBox" Width="110" Height="28" Background="#161210" Foreground="White" BorderBrush="#5C4033"/>
-                    </StackPanel>
-                    <StackPanel Spacing="2">
-                        <TextBlock Text="Description" FontSize="10" Foreground="#A39382"/>
-                        <TextBox x:Name="EditDescriptionBox" Width="260" Height="28" Background="#161210" Foreground="White" BorderBrush="#5C4033"/>
-                    </StackPanel>
-                    <Button Content="Update" Click="OnUpdateClick" Background="#8B5A2B" Foreground="White" Width="100" VerticalAlignment="Bottom" Height="28"/>
-                    <Button Content="Delete" Click="OnDeleteClick" Background="#4E2A1D" Foreground="#FFA0A0" Width="100" VerticalAlignment="Bottom" Height="28"/>
+            <!-- 1. ЗАГОЛОВОК, ПОИСК И ФИЛЬТРЫ -->
+            <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto" ColumnSpacing="14">
+                <TextBlock Grid.Column="0" Text="Транзакції" FontSize="22" FontWeight="Bold" Foreground="#F8FAFC" VerticalAlignment="Center"/>
+
+                <Grid Grid.Column="1" VerticalAlignment="Center">
+                    <TextBox x:Name="SearchBox" Classes="darkInput" Height="34" Padding="34,6,10,6"
+                             PlaceholderText="Пошук за описом, документом, рахунком або контрагентом..."
+                             TextChanged="OnSearchTextChanged"/>
+                    <Path Classes="linealIcon" Data="{StaticResource IconSearch}" Stroke="#64748B"
+                          Width="15" Height="15" Margin="11,0,0,0" HorizontalAlignment="Left" IsHitTestVisible="False"/>
+                </Grid>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                    <Button x:Name="FilterAllBtn" Content="Всі" Click="OnTypeFilterClick" Tag="all" Classes="filterPillActive"/>
+                    <Button x:Name="FilterIncomeBtn" Content="Дохід" Click="OnTypeFilterClick" Tag="income" Classes="filterPill"/>
+                    <Button x:Name="FilterExpenseBtn" Content="Витрати" Click="OnTypeFilterClick" Tag="expense" Classes="filterPill"/>
+
+                    <ComboBox x:Name="CategoryFilterBox" Classes="darkCombo" Width="135" Height="32" SelectionChanged="OnFilterSelectionChanged"/>
+                    <ComboBox x:Name="AccountFilterBox" Classes="darkCombo" Width="130" Height="32" SelectionChanged="OnFilterSelectionChanged"/>
+                    <ComboBox x:Name="CurrencyFilterBox" Classes="darkCombo" Width="90" Height="32" SelectionChanged="OnFilterSelectionChanged"/>
                 </StackPanel>
-                <TextBlock x:Name="StatusText" Text="" FontSize="11" Foreground="#FF8A8A" IsVisible="False"/>
-            </StackPanel>
-        </Border>
+            </Grid>
 
-        <!-- Основные кнопки управления -->
-        <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="10">
-            <Button Content="Add Transaction" Click="OnAddClick" Background="#2D5A27" Foreground="White" Width="140" Height="32"/>
-            <Button Content="Refresh List" Click="OnRefreshClick" Background="#2B3630" Foreground="#CCC" Width="110" Height="32"/>
-        </StackPanel>
+            <!-- 2. KPI-КАРТОЧКИ И КОЛЬЦЕВАЯ ДИАГРАММА -->
+            <Grid Grid.Row="1" ColumnDefinitions="1.1*, 1.2*" ColumnSpacing="14">
+                <Grid ColumnDefinitions="*, *" RowDefinitions="Auto, Auto" ColumnSpacing="10" RowSpacing="10">
+                    <Border Grid.Row="0" Grid.ColumnSpan="2" Background="#1E293B" BorderBrush="#334155" BorderThickness="1" CornerRadius="10" Padding="14,10">
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Чистий баланс (за фільтром)" FontSize="11" Foreground="#94A3B8"/>
+                            <TextBlock x:Name="NetBalanceText" Text="0.00 UAH" FontSize="21" FontWeight="Bold" Foreground="#F8FAFC"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="0" Background="#1E293B" BorderBrush="#334155" BorderThickness="1" CornerRadius="10" Padding="14,10">
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Надходження (Income)" FontSize="11" Foreground="#94A3B8"/>
+                            <TextBlock x:Name="TotalIncomeText" Text="+0.00" FontSize="16" FontWeight="Bold" Foreground="#10B981"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="1" Background="#1E293B" BorderBrush="#334155" BorderThickness="1" CornerRadius="10" Padding="14,10">
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="Витрати (Expenses)" FontSize="11" Foreground="#94A3B8"/>
+                            <TextBlock x:Name="TotalExpenseText" Text="-0.00" FontSize="16" FontWeight="Bold" Foreground="#F87171"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <Border Grid.Column="1" Background="#1E293B" BorderBrush="#334155" BorderThickness="1" CornerRadius="10" Padding="14,10">
+                    <Grid ColumnDefinitions="Auto, *" ColumnSpacing="16">
+                        <Grid Grid.Column="0" Width="116" Height="116" VerticalAlignment="Center">
+                            <Ellipse Width="116" Height="116" Stroke="#0F172A" StrokeThickness="18"/>
+                            <Canvas x:Name="DonutChartCanvas" Width="116" Height="116"/>
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <TextBlock Text="Витрати" FontSize="10" Foreground="#94A3B8" HorizontalAlignment="Center"/>
+                                <TextBlock x:Name="ChartCountText" Text="0 оп." FontSize="12" FontWeight="Bold" Foreground="#F8FAFC" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="5">
+                            <TextBlock Text="Структура витрат за категоріями" FontSize="12" FontWeight="Bold" Foreground="#F8FAFC" Margin="0,0,0,2"/>
+                            <StackPanel x:Name="ChartLegendPanel" Spacing="4"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- 3. ТАБЛИЦА ТРАНЗАКЦИЙ -->
+            <Border Grid.Row="2" Background="#1E293B" BorderBrush="#334155" BorderThickness="1" CornerRadius="10" ClipToBounds="True">
+                <DataGrid x:Name="TransactionsGrid"
+                          AutoGenerateColumns="True"
+                          IsReadOnly="True"
+                          AutoGeneratingColumn="OnAutoGeneratingColumn"
+                          SelectionMode="Single"
+                          SelectionChanged="OnSelectionChanged"
+                          GridLinesVisibility="Horizontal"
+                          HorizontalGridLinesBrush="#293548"
+                          Background="#1E293B"
+                          RowBackground="#1E293B"
+                          Foreground="#F8FAFC"
+                          BorderThickness="0"/>
+            </Border>
+
+            <!-- 4. ПАНЕЛЬ РЕДАКТИРОВАНИЯ ВЫБРАННОЙ ТРАНЗАКЦИИ -->
+            <Border Grid.Row="3" x:Name="ActionPanel" IsVisible="False" Background="#1E293B" BorderBrush="#10B981" BorderThickness="1" Padding="12" CornerRadius="10">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Selected Transaction Management" FontWeight="Bold" FontSize="12" Foreground="#10B981"/>
+                    <Grid ColumnDefinitions="130, 130, *, Auto, Auto" ColumnSpacing="10">
+                        <StackPanel Grid.Column="0" Spacing="2">
+                            <TextBlock Text="Document" FontSize="10" Foreground="#94A3B8"/>
+                            <TextBox x:Name="DocumentBox" Classes="darkInput" Height="30" Foreground="#94A3B8" IsReadOnly="True"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="2">
+                            <TextBlock Text="Amount" FontSize="10" Foreground="#94A3B8"/>
+                            <TextBox x:Name="EditAmountBox" Classes="darkInput" Height="30"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Spacing="2">
+                            <TextBlock Text="Description" FontSize="10" Foreground="#94A3B8"/>
+                            <TextBox x:Name="EditDescriptionBox" Classes="darkInput" Height="30"/>
+                        </StackPanel>
+                        <Button Grid.Column="3" Click="OnUpdateClick" Background="#D97706" Foreground="White" FontWeight="SemiBold" Width="105" Height="30" CornerRadius="6" VerticalAlignment="Bottom">
+                            <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
+                                <Path Classes="linealIcon" Data="{StaticResource IconEdit}" Stroke="White" Width="14" Height="14"/>
+                                <TextBlock Text="Update" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Grid.Column="4" Click="OnDeleteClick" Background="#DC2626" Foreground="White" FontWeight="SemiBold" Width="105" Height="30" CornerRadius="6" VerticalAlignment="Bottom">
+                            <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
+                                <Path Classes="linealIcon" Data="{StaticResource IconTrash}" Stroke="White" Width="14" Height="14"/>
+                                <TextBlock Text="Delete" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                    <TextBlock x:Name="StatusText" Text="" FontSize="11" Foreground="#F87171" IsVisible="False"/>
+                </StackPanel>
+            </Border>
+
+            <!-- 5. НИЖНЯЯ ПАНЕЛЬ ДЕЙСТВИЙ -->
+            <Grid Grid.Row="4" ColumnDefinitions="*, *" ColumnSpacing="12">
+                <Button Grid.Column="0" Click="OnAddClick"
+                        Background="#10B981" Foreground="#06281E" FontWeight="Bold" FontSize="13"
+                        Height="38" CornerRadius="8" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+                        <Path Classes="linealIcon" Data="{StaticResource IconPlus}" Stroke="#06281E" Width="16" Height="16"/>
+                        <TextBlock Text="Add Transaction" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Grid.Column="1" Click="OnRefreshClick"
+                        Background="#1E293B" Foreground="#E2E8F0" BorderBrush="#334155" BorderThickness="1" FontWeight="SemiBold" FontSize="13"
+                        Height="38" CornerRadius="8" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+                        <Path Classes="linealIcon" Data="{StaticResource IconRefresh}" Stroke="#E2E8F0" Width="16" Height="16"/>
+                        <TextBlock Text="Refresh List" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>
