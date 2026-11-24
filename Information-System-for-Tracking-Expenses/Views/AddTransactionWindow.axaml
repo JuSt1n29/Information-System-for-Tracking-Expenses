@@ -13,35 +13,35 @@
                     <TextBlock Text="Заповніть реквізити фінансової операції" FontSize="12" Foreground="#94A3B8"/>
                 </StackPanel>
 
-                <!-- Счёт -->
+                
                 <StackPanel Spacing="4">
                     <TextBlock Text="Account *" FontSize="11" FontWeight="SemiBold" Foreground="#94A3B8"/>
                     <ComboBox x:Name="AccountComboBox" Height="36" Background="#0F172A" Foreground="#F8FAFC"
                               BorderBrush="#334155" CornerRadius="6" HorizontalAlignment="Stretch"/>
                 </StackPanel>
 
-                <!-- Категория -->
+                
                 <StackPanel Spacing="4">
                     <TextBlock Text="Category *" FontSize="11" FontWeight="SemiBold" Foreground="#94A3B8"/>
                     <ComboBox x:Name="CategoryComboBox" Height="36" Background="#0F172A" Foreground="#F8FAFC"
                               BorderBrush="#334155" CornerRadius="6" HorizontalAlignment="Stretch"/>
                 </StackPanel>
 
-                <!-- Контрагент -->
+                
                 <StackPanel Spacing="4">
                     <TextBlock Text="Counterparty" FontSize="11" FontWeight="SemiBold" Foreground="#94A3B8"/>
                     <ComboBox x:Name="CounterpartyComboBox" Height="36" Background="#0F172A" Foreground="#F8FAFC"
                               BorderBrush="#334155" CornerRadius="6" HorizontalAlignment="Stretch"/>
                 </StackPanel>
 
-                <!-- Сотрудник -->
+                
                 <StackPanel Spacing="4">
                     <TextBlock Text="Employee" FontSize="11" FontWeight="SemiBold" Foreground="#94A3B8"/>
                     <ComboBox x:Name="EmployeeComboBox" Height="36" Background="#0F172A" Foreground="#F8FAFC"
                               BorderBrush="#334155" CornerRadius="6" HorizontalAlignment="Stretch"/>
                 </StackPanel>
 
-                <!-- Тип и Валюта в одной строке -->
+                
                 <Grid ColumnDefinitions="*, 12, 130">
                     <StackPanel Grid.Column="0" Spacing="4">
                         <TextBlock Text="Type" FontSize="11" FontWeight="SemiBold" Foreground="#94A3B8"/>
@@ -63,24 +63,24 @@
                     </StackPanel>
                 </Grid>
 
-                <!-- Сумма -->
+               
                 <StackPanel Spacing="4">
                     <TextBlock Text="Amount *" FontSize="11" FontWeight="SemiBold" Foreground="#10B981"/>
                     <TextBox x:Name="AmountBox" Height="36" Watermark="0.00" Background="#0F172A" Foreground="#F8FAFC"
                              BorderBrush="#10B981" CornerRadius="6" Padding="10,7"/>
                 </StackPanel>
 
-                <!-- Описание -->
+                
                 <StackPanel Spacing="4">
                     <TextBlock Text="Description" FontSize="11" FontWeight="SemiBold" Foreground="#94A3B8"/>
                     <TextBox x:Name="DescriptionBox" Height="36" Watermark="Optional note..." Background="#0F172A" Foreground="#F8FAFC"
                              BorderBrush="#334155" CornerRadius="6" Padding="10,7"/>
                 </StackPanel>
 
-                <!-- Сообщение об ошибке валидации -->
+                
                 <TextBlock x:Name="ErrorText" Text="" FontSize="11" Foreground="#F87171" TextWrapping="Wrap" IsVisible="False"/>
 
-                <!-- Кнопки -->
+                
                 <Grid ColumnDefinitions="*, 10, *" Margin="0,10,0,0">
                     <Button Grid.Column="0" Content="Cancel" Click="OnCancelClick" Height="36"
                             Background="#0F172A" Foreground="#CBD5E1" BorderBrush="#334155" BorderThickness="1"

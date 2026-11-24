@@ -11,7 +11,7 @@ namespace InformationSystemForTrackingExpenses.Tables
         public string email { get; set; }
         public decimal salary { get; set; }
         public DateTime hire_date { get; set; }
-        public string status { get; set; } // 'active', 'inactive', 'terminated'
+        public string status { get; set; } 
 
         public EmployeesTable(int id, string full_name, string position, string phone, string email, decimal salary, DateTime hire_date, string status)
         {

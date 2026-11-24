@@ -8,7 +8,7 @@
     <Border Margin="20" Padding="26" Background="#1E293B" BorderBrush="#334155" BorderThickness="1" CornerRadius="12">
         <StackPanel Spacing="13" VerticalAlignment="Center">
 
-            <!-- Заголовок -->
+            
             <StackPanel Spacing="6" Margin="0,0,0,8">
                 <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
                     <Border Width="10" Height="10" CornerRadius="5" Background="#10B981" VerticalAlignment="Center"/>
@@ -17,7 +17,7 @@
                 <TextBlock Text="Реєстрація нового оператора системи" FontSize="12" Foreground="#94A3B8" HorizontalAlignment="Center"/>
             </StackPanel>
 
-            <!-- Полное имя -->
+            
             <StackPanel Spacing="4">
                 <TextBlock Text="Full Name *" FontSize="11" FontWeight="SemiBold" Foreground="#94A3B8"/>
                 <TextBox x:Name="NameBox" Height="36" Background="#0F172A" Foreground="#F8FAFC"
@@ -25,7 +25,7 @@
                          PlaceholderText="Ivan Ivanov"/>
             </StackPanel>
 
-            <!-- Email -->
+           
             <StackPanel Spacing="4">
                 <TextBlock Text="Email *" FontSize="11" FontWeight="SemiBold" Foreground="#94A3B8"/>
                 <TextBox x:Name="EmailBox" Height="36" Background="#0F172A" Foreground="#F8FAFC"
@@ -33,7 +33,7 @@
                          PlaceholderText="user@domain.com"/>
             </StackPanel>
 
-            <!-- Пароль -->
+            
             <StackPanel Spacing="4">
                 <TextBlock Text="Password *" FontSize="11" FontWeight="SemiBold" Foreground="#94A3B8"/>
                 <TextBox x:Name="PasswordBox" PasswordChar="•" Height="36" Background="#0F172A" Foreground="#F8FAFC"
@@ -41,7 +41,7 @@
                          PlaceholderText="••••••••"/>
             </StackPanel>
 
-            <!-- Подтверждение пароля -->
+            
             <StackPanel Spacing="4">
                 <TextBlock Text="Confirm Password *" FontSize="11" FontWeight="SemiBold" Foreground="#94A3B8"/>
                 <TextBox x:Name="ConfirmPasswordBox" PasswordChar="•" Height="36" Background="#0F172A" Foreground="#F8FAFC"
@@ -49,10 +49,10 @@
                          PlaceholderText="••••••••"/>
             </StackPanel>
 
-            <!-- Сообщение об ошибке -->
+            
             <TextBlock x:Name="ErrorText" Text="" FontSize="11" Foreground="#F87171" TextWrapping="Wrap" HorizontalAlignment="Center" IsVisible="False"/>
 
-            <!-- Кнопка регистрации -->
+           
             <Button Click="OnRegisterClick" Height="38" Background="#10B981" Foreground="#06281E"
                     FontWeight="Bold" CornerRadius="8" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,8,0,0">
                 <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
@@ -61,7 +61,7 @@
                 </StackPanel>
             </Button>
 
-            <!-- Возврат ко входу -->
+           
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="5" Margin="0,4,0,0">
                 <TextBlock Text="Already registered?" FontSize="12" Foreground="#94A3B8" VerticalAlignment="Center"/>
                 <Button Content="Sign In" Click="OnBackToLoginClick" Background="Transparent" Foreground="#10B981" Padding="4,2" FontSize="12" FontWeight="Bold"/>

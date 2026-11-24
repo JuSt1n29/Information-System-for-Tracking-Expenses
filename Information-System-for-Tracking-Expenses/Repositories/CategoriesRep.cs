@@ -6,7 +6,7 @@ namespace InformationSystemForTrackingExpenses.Repositories
 {
     public class CategoriesRep
     {
-        private DB db = DB.getInstance(); // Используем singleton, как у тебя заведено в DB.cs
+        private DB db = DB.getInstance(); 
 
         public List<CategoriesTable> GetAll()
         {
@@ -36,19 +36,19 @@ namespace InformationSystemForTrackingExpenses.Repositories
         public bool Add(CategoriesTable item)
         {
             string query = $"INSERT INTO categories (id, name, type) VALUES ({item.id}, '{item.name}', '{item.type}')";
-            return db.execSql(query); // Используем execSql
+            return db.execSql(query); 
         }
 
         public bool Update(CategoriesTable item)
         {
             string query = $"UPDATE categories SET name='{item.name}', type='{item.type}' WHERE id={item.id}";
-            return db.execSql(query); // Используем execSql
+            return db.execSql(query); 
         }
 
         public bool Delete(CategoriesTable item)
         {
             string query = $"DELETE FROM categories WHERE id={item.id}";
-            return db.execSql(query); // Используем execSql
+            return db.execSql(query); 
         }
     }
 }

@@ -4,22 +4,22 @@ namespace InformationSystemForTrackingExpenses.Tables
 {
     public class TransactionsTable
     {
-        public int id { get; set; } // transaction_id
+        public int id { get; set; } 
         public DateTime transaction_date { get; set; }
-        public string type { get; set; } // transaction_type
+        public string type { get; set; } 
         public decimal amount { get; set; }
         public string currency { get; set; }
         public string document_number { get; set; }
         public string description { get; set; }
 
-        // Свойства ID для добавления и обновления в БД
+        
         public int account_id { get; set; }
         public int? counterparty_id { get; set; }
         public int? employee_id { get; set; }
         public int category_id { get; set; }
         public int user_id { get; set; }
 
-        // Текстовые данные из вьюхи
+        
         public string? account_name { get; set; }
         public string? account_type { get; set; }
 
@@ -36,7 +36,7 @@ namespace InformationSystemForTrackingExpenses.Tables
         public string? user_name { get; set; }
         public string? user_email { get; set; }
 
-        // 1. Конструктор для чтения из чистого View
+        
         public TransactionsTable(int id, DateTime transaction_date, string type, decimal amount, 
             string currency, string document_number, string description, 
             string? account_name, string? account_type, 
@@ -65,7 +65,7 @@ namespace InformationSystemForTrackingExpenses.Tables
             this.user_email = user_email;
         }
 
-        // 2. Конструктор для создания/добавления транзакций
+       
         public TransactionsTable(int id, int account_id, int? counterparty_id, int? employee_id, 
             int category_id, int user_id, string type, decimal amount, 
             string currency, DateTime transaction_date, string description, string document_number)
